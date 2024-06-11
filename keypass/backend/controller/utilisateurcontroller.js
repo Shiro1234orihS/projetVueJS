@@ -15,7 +15,7 @@ var connectionOptions = {
 function login(req, res) {
    
    var connection = mysql.createConnection(connectionOptions);
-   var queryStr = 'SELECT * FROM `utilisateur` WHERE `NOMUTILISATEUR` = ? AND `MOTPASSEUTILISATEUR` = ?';
+   var queryStr = 'SELECT * FROM `UTILISATEUR` WHERE `NOMUTILISATEUR` = ? AND `MOTPASSUTILISATEUR` = ?';
    connection.connect();   
    connection.query(queryStr, [req.body.name, req.body.password], function (error, results, fields) {
       if (error) {
@@ -24,7 +24,7 @@ function login(req, res) {
         return;
       }    
       if (results.length == 0) {
-         res.status(404).json({ message: "Nom d'utilisateur ou mot de passe incorrect" });
+         res.status(404).json({ message: "Nom d'UTILISATEUR ou mot de passe incorrect" });
          return;
       }    
       // Peut-être afficher le résultat pour le débogage, mais soyez prudent avec les informations sensibles
@@ -40,30 +40,31 @@ function register(req, res) {
 
     console.log(req.body)
     
-    req.body.utilisateurPREMIUM = 0;
-    req.body.utilisateurROLE = 'utilisateur';
+    req.body.UTILISATEURPREMIUM = 0;
+    req.body.UTILISATEURROLE = 'UTILISATEUR';
     
-    var queryStr = 'INSERT INTO `utilisateur` (`utilisateurID`, `utilisateurPSEUDO`, `NOMUTILISATEUR`, `utilisateurBIRTHDAY`, `utilisateurPASSWORD`, `utilisateurROLE`, `utilisateurPREMIUM`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    var queryStr = 'INSERT INTO `UTILISATEUR` (`NOMUTILISATEUR`, `MOTPASSUTILISATEUR`) VALUES (?,?)';
     
     connection.connect();
     
-    connection.query(queryStr, [req.body.utilisateurID, req.body.utilisateurPSEUDO, req.body.NOMUTILISATEUR, req.body.utilisateurBIRTHDAY, req.body.utilisateurPASSWORD, req.body.utilisateurROLE, req.body.utilisateurPREMIUM], function (error, results, fields) {
+    connection.query(queryStr, [req.body.UTILISATEURID, req.body.UTILISATEURPSEUDO, req.body.NOMUTILISATEUR, req.body.UTILISATEURBIRTHDAY, req.body.UTILISATEURPASSWORD, req.body.UTILISATEURROLE, req.body.UTILISATEURPREMIUM], function (error, results, fields) {
        if (error) {
           console.error('Une erreur est survenue lors de la requête à la base de données:', error);
           res.status(500).json({ error: "Une erreur interne est survenue" });
           return;
        }
       
-       res.status(200).json({ message: "Utilisateur enregistré avec succès" });
+       res.status(200).json({ message: "UTILISATEUR enregistré avec succès" });
     });
    
     connection.end();
 }
-// Fonction pour récupérer les utilisateur de la base de données
+
+// Fonction pour récupérer les UTILISATEUR de la base de données
 function getutilisateur(req, res) {
    console.log("etst")
    var connection = mysql.createConnection(connectionOptions);
-   var queryStr = 'SELECT * FROM `utilisateur`';
+   var queryStr = 'SELECT * FROM `UTILISATEUR`';
 
    connection.connect();
 
@@ -75,7 +76,7 @@ function getutilisateur(req, res) {
       return;
    }
    if (results.length == 0) {
-      res.status(404).json({ message: "Aucun utilisateur trouvé" });
+      res.status(404).json({ message: "Aucun UTILISATEUR trouvé" });
       return;
    }
  
@@ -87,7 +88,7 @@ function getutilisateur(req, res) {
 
 function getuserById(req, res) {
    var connection = mysql.createConnection(connectionOptions);
-   var queryStr = 'SELECT * FROM `utilisateur` WHERE utilisateurID = ?';
+   var queryStr = 'SELECT * FROM `UTILISATEUR` WHERE UTILISATEURID = ?';
 
    connection.connect();   
    connection.query(queryStr, [req.params.id], function (error, results, fields) {
