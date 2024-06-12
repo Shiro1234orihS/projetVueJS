@@ -1,15 +1,13 @@
 <script setup>
 import { userStore } from '@/stores/user'
-import { ref, computed, watch  } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-
 
 const user = userStore()
 const router = useRouter();
 
 const name = ref("")
 const password = ref("")
-
 
 function login() {
   user.login({
@@ -21,35 +19,33 @@ function login() {
 }
 
 function logout() {
-  twitter.user = null
+  user.logout();
 }
 </script>
 
 <template>
-   <main>
+  <main>
     <div class="login-box">
-
-        <div class="user-box">
-          <input type="text"  required="" v-model="name">
-          <label>Nom utilisateur</label>
-        </div>
-        <div class="user-box">
-          <input type="password"  required="" v-model="password">
-          <label>Mot de passe</label>
-        </div><center>
-        <a  @click="login">
-               Connection
-           <span></span>
-        </a></center>
-
-    <label class="inscrption">Vous n’avez pas de compte ?</label> 
-    <a class="inscrptiona" href="/accountcreation">Inscrivez-vous</a>
-
+      <div class="user-box">
+        <input type="text" required="" v-model="name">
+        <label>Nom utilisateur</label>
+      </div>
+      <div class="user-box">
+        <input type="password" required="" v-model="password">
+        <label>Mot de passe</label>
+      </div>
+      <center>
+        <a @click="login">
+          Connexion
+          <span></span>
+        </a>
+      </center>
+      <label class="inscription">Vous n’avez pas de compte ?</label>
+      <a class="inscriptiona" href="/accountcreation">Inscrivez-vous</a>
     </div>
   </main>
-        
 </template>
-  
+
 <style scoped>
 .login-box {
   position: absolute;
@@ -58,7 +54,7 @@ function logout() {
   width: 400px;
   padding: 40px;
   transform: translate(-50%, -50%);
-  background: rgba(8, 117, 25, 0.987);
+  background: #2C3E50; /* Bleu Foncé */
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
   border-radius: 10px;
@@ -95,11 +91,11 @@ function logout() {
 .login-box .user-box input:valid ~ label {
   top: -20px;
   left: 0;
-  color: #bdb8b8;
+  color: #95A5A6; /* Gris Moyen */
   font-size: 12px;
 }
 
-.login-box  a {
+.login-box a {
   position: relative;
   display: inline-block;
   padding: 10px 20px;
@@ -111,18 +107,17 @@ function logout() {
   transition: .5s;
   margin-top: 20px;
   margin-bottom: 10px;
-  letter-spacing: 4px
-  
+  letter-spacing: 4px;
 }
 
 .login-box a:hover {
-  background: #15bad0;
+  background: #3498DB; /* Bleu Clair */
   color: #fff;
   border-radius: 5px;
-  box-shadow: 0 0 5px #15bad0,
-              0 0 25px #15bad0,
-              0 0 50px #15bad0,
-              0 0 100px #15bad0;
+  box-shadow: 0 0 5px #3498DB,
+              0 0 25px #3498DB,
+              0 0 50px #3498DB,
+              0 0 100px #3498DB;
 }
 
 .login-box a span {
@@ -135,7 +130,7 @@ function logout() {
     left: -100%;
   }
 
-  50%,100% {
+  50%, 100% {
     left: 100%;
   }
 }
@@ -145,11 +140,11 @@ function logout() {
   left: -100%;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #15bad0);
+  background: linear-gradient(90deg, transparent, #3498DB); /* Bleu Clair */
   animation: btn-anim1 2s linear infinite;
 }
 
-.inscrption{
+.inscription {
   position: absolute;
   padding: 10px 0;
   font-size: 16px;
@@ -158,6 +153,7 @@ function logout() {
   transition: .5s;
 }
 
-
+.inscriptiona {
+  color: #3498DB; /* Bleu Clair */
+}
 </style>
-  

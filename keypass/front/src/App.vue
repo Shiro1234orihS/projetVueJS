@@ -1,14 +1,20 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { computed } from 'vue'
 
+const route = useRoute();
+
+const isConnexionView = computed(() => {
+  return route.name !== 'connexion';
+});
 </script>
 
 <template>
-  <header>
-     <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <header v-if="isConnexionView">
+    <nav>
+      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/about">About</RouterLink>
+    </nav>
   </header>
 
   <RouterView/>
@@ -22,5 +28,4 @@ header{
   height: 50px;
   background: rgb(76, 76, 212);
 }
-
 </style>
