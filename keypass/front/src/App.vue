@@ -4,6 +4,10 @@ import { ref, computed, onMounted } from 'vue'
 
 const route = useRoute();
 const hiddenButtonsVisible = ref(false);
+const nombredelettre = ref(12);
+const includeSpecialChars = ref(false);
+const includeUppercase = ref(false);
+const includeNumbers = ref(false);
 
 const isConnexionView = computed(() => {
   return route.name !== 'connexion';
@@ -11,6 +15,34 @@ const isConnexionView = computed(() => {
 
 const toggleHiddenButtons = () => {
   hiddenButtonsVisible.value = !hiddenButtonsVisible.value;
+};
+
+// Function to generate a random password
+const generatePassword = () => {
+  const length = nombredelettre.value; // Use the reactive variable for length
+  let charset = "abcdefghijklmnopqrstuvwxyz";
+  
+  if (includeUppercase.value) {
+    charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  }
+  if (includeNumbers.value) {
+    charset += "0123456789";
+  }
+  if (includeSpecialChars.value) {
+    charset += "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+  }
+
+  let password = "";
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    password += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return password;
+};
+
+// Function to set the generated password to the input field
+const setPassword = () => {
+  const passwordInput = document.getElementById("input-pass");
+  passwordInput.value = generatePassword();
 };
 </script>
 
@@ -25,7 +57,8 @@ const toggleHiddenButtons = () => {
             </div>
             <button class="profile-button">Profil</button>
         </nav>
-        <div v-show="hiddenButtonsVisible" id="hidden-pass">
+    </header>
+    <div v-show="hiddenButtonsVisible" id="hidden-pass">
             <button @click="toggleHiddenButtons">❌</button>
             <div>
                 <p>Nom de l'application</p>
@@ -35,26 +68,22 @@ const toggleHiddenButtons = () => {
                 <p>Nom d'utilisateur</p>
                 <input type="text">
                 <p>Mot de passe</p>
-                <input type="password" id="input-pass">
+                <input type="text" id="input-pass">
                 <div class="input">
-                    <input type="checkbox"><p>Caractères spéciaux</p>
-                    <input type="checkbox"><p>Majuscule</p>
-                    <input type="checkbox"><p>Nombre</p>
+                    <input type="checkbox" v-model="includeSpecialChars"><p>Caractères spéciaux</p>
+                    <input type="checkbox" v-model="includeUppercase"><p>Majuscule</p>
+                    <input type="checkbox" v-model="includeNumbers"><p>Nombre</p>
+                    <input id="nb" type="number" v-model="nombredelettre"><p>Nombre de caractères</p>
                 </div>
-                <div class="input">
-                    <input id="nb" type="number"><p>Nombre de caractères</p>
-                </div>
+                <button @click="setPassword">Génerer un mots de passe</button>
                 <p id="comment">Commentaire</p>
                 <input type="text">
             </div>
             <button>Nouveau mot de passe</button>
         </div>
-    </header>
     <RouterView/>
  </div>
  <div v-show="hiddenButtonsVisible" class="overlay"></div>
-
-
 </template>
 
 <style scoped>
@@ -94,8 +123,8 @@ nav {
 #hidden-pass {
     position: fixed;
     text-align: center;
-    margin-left: 30%;
-    width: 40%;
+    margin-left: 20%;
+    width: 50%;
     background-color: rgba(198, 45, 45, 0.84);
     display: flex;
     flex-direction: column;
@@ -123,8 +152,6 @@ nav {
     margin: 0 0 0 1px;
     display: flex;
 }
-
-
 
 #comment {
     margin-top: 0;
