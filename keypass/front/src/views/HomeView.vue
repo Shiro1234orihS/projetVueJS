@@ -29,12 +29,12 @@
   
   <style scoped>
   table, th, td {
-    border: 1px solid rgb(255, 255, 255);
+    border: 1px solid rgb(0, 0, 0);
     border-collapse: collapse;
   }
   
   p {
-    color: aliceblue;
+    color: rgb(0, 0, 0);
   }
   </style>
   
