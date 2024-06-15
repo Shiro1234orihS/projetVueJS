@@ -24,6 +24,7 @@
         <td><p>GOOGLE</p></td>
         <td><p>GOOGLE</p></td>
       </tr>
+      
     </table>
   </template>
   

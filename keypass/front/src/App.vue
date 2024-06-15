@@ -68,7 +68,7 @@ const setPassword = () => {
                 <p>Nom d'utilisateur</p>
                 <input type="text">
                 <p>Mot de passe</p>
-                <input type="text" id="input-pass">
+                <input type="password" id="input-pass">
                 <div class="input">
                     <input type="checkbox" v-model="includeSpecialChars"><p>Caractères spéciaux</p>
                     <input type="checkbox" v-model="includeUppercase"><p>Majuscule</p>
@@ -123,7 +123,7 @@ nav {
 #hidden-pass {
     position: fixed;
     text-align: center;
-    margin-left: 20%;
+    margin-left: 25%;
     width: 50%;
     background-color: rgba(198, 45, 45, 0.84);
     display: flex;

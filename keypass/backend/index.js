@@ -10,6 +10,7 @@ app.use(express.json()); // Permet de parser les requêtes en JSON. C'est un mid
 
 // Importation des contrôleurs. 
 const Utilisateurcontroller = require('./controller/utilisateurcontroller'); 
+const Appcontroller = require('./controller/password'); 
 
 
 // Configuration pour éviter les erreurs CORS en autorisant les requêtes de n'importe quelle origine.
@@ -61,7 +62,8 @@ app.post('/register', Utilisateurcontroller.register); // Enregistrement d'un no
 app.get('/users', Utilisateurcontroller.getutilisateur); // Récupération de la liste des utilisateurs
 app.get('/users/:id', Utilisateurcontroller.getuserById); // Récupération de la liste des utilisateurs
 
-
+// Routes pour la gestion des app
+app.get('/app', Appcontroller.getapp); // Récupération de la liste des utilisateurs
 
 // Démarrage du serveur sur le port spécifié
 app.listen(port, function () {
