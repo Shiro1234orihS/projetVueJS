@@ -26,6 +26,7 @@ const toggleHiddenButtons = () => {
             <button class="profile-button">Profil</button>
         </nav>
         <div v-show="hiddenButtonsVisible" id="hidden-pass">
+            <button @click="toggleHiddenButtons">❌</button>
             <div>
                 <p>Nom de l'application</p>
                 <input type="text">
@@ -52,13 +53,14 @@ const toggleHiddenButtons = () => {
     <RouterView/>
  </div>
  <div v-show="hiddenButtonsVisible" class="overlay"></div>
+
+
 </template>
 
 <style scoped>
 /* Global Styles */
 header {
     background: rgb(76, 76, 212);
-    z-index: 1;
     height: 75px;
     position: relative;
 }
@@ -90,6 +92,7 @@ nav {
 
 /* Hidden Password Section Styles */
 #hidden-pass {
+    position: fixed;
     text-align: center;
     margin-left: 30%;
     width: 40%;
