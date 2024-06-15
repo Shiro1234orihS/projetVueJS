@@ -16,9 +16,8 @@ const toggleHiddenButtons = () => {
 
 <template>
  <div>
-    
     <header v-if="isConnexionView">
-        <nav >
+        <nav>
             <button @click="toggleHiddenButtons">Ajouter un mots de passe</button>
             <div class="recherche">
                 <input type="text">
@@ -26,21 +25,28 @@ const toggleHiddenButtons = () => {
             </div>
             <button class="profile-button">Profil</button>
         </nav>
-        <div v-show="hiddenButtonsVisible" id="hidden-pass" >
+        <div v-show="hiddenButtonsVisible" id="hidden-pass">
             <div>
                 <p>Nom de l'application</p>
                 <input type="text">
                 <p>Lien</p>
                 <input type="text">
-                <p>Nom d'utilisateir</p>
+                <p>Nom d'utilisateur</p>
                 <input type="text">
                 <p>Mot de passe</p>
                 <input type="password" id="input-pass">
-                <div class="input"><input type="checkbox"><p>Caractères spéciaux</p><input type="checkbox"><p>Mascule</p><input type="checkbox"><p>Nombre</p></div>
+                <div class="input">
+                    <input type="checkbox"><p>Caractères spéciaux</p>
+                    <input type="checkbox"><p>Majuscule</p>
+                    <input type="checkbox"><p>Nombre</p>
+                </div>
+                <div class="input">
+                    <input id="nb" type="number"><p>Nombre de caractères</p>
+                </div>
                 <p id="comment">Commentaire</p>
                 <input type="text">
             </div>
-            <button>Nouveaux mots de pass</button>
+            <button>Nouveau mot de passe</button>
         </div>
     </header>
     <RouterView/>
@@ -49,6 +55,7 @@ const toggleHiddenButtons = () => {
 </template>
 
 <style scoped>
+/* Global Styles */
 header {
     background: rgb(76, 76, 212);
     z-index: 1;
@@ -56,6 +63,7 @@ header {
     position: relative;
 }
 
+/* Navigation Styles */
 nav {
     display: flex;
     justify-content: space-between;
@@ -71,6 +79,7 @@ nav {
     align-items: center;
 }
 
+/* Profile Button Styles */
 .profile-button {
     width: 60px;
     height: 60px;
@@ -79,19 +88,19 @@ nav {
     border-color: #E74C3C;
 }
 
+/* Hidden Password Section Styles */
 #hidden-pass {
     text-align: center;
-    margin-left: 40%;
-    width: 30%;
+    margin-left: 30%;
+    width: 40%;
     background-color: rgba(198, 45, 45, 0.84);
-    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: 10px;
     z-index: 2;
 }
 
-/* Overlay pour le fond sombre */
+/* Overlay Styles */
 .overlay {
     position: fixed;
     top: 0;
@@ -102,17 +111,24 @@ nav {
     z-index: 0;
 }
 
-/* Input pass */
-#input-pass{
-    margin: 0px;
-}
-.input {
-    margin:0px 0px 0px 1px;
-    display: flex;
-    
+/* Input and Form Styles */
+#input-pass {
+    margin: 0;
 }
 
-#comment{
-    margin-top: 0%;
+.input {
+    margin: 0 0 0 1px;
+    display: flex;
+}
+
+
+
+#comment {
+    margin-top: 0;
+}
+
+#nb {
+    width: 30px;
+    height: 30px;
 }
 </style>
