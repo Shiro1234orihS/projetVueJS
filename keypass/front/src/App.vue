@@ -2,6 +2,7 @@
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 
+
 const route = useRoute();
 const hiddenButtonsVisible = ref(false);
 const nombredelettre = ref(12);
