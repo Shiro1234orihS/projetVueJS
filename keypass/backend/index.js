@@ -65,6 +65,7 @@ app.get('/users/:id', Utilisateurcontroller.getuserById); // Récupération de l
 // Routes pour la gestion des app
 app.get('/app', Appcontroller.getapp); // Récupération de la liste des utilisateurs
 app.get('/getappid/:id', Appcontroller.getappid); // Récupération de la liste des utilisateurs
+app.post('/addapp', Appcontroller.addapp); // Récupération de la liste des utilisateurs
 
 // Démarrage du serveur sur le port spécifié
 app.listen(port, function () {
