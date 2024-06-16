@@ -1,10 +1,25 @@
 <script>
-import App from '@/components/App.vue'
+import { onMounted } from 'vue';
+import App from '@/components/App.vue';
+import { useAppStore } from '@/stores/app';
+
 export default {
   components: {
     App
+  },
+  setup() {
+    const appStore = useAppStore();
+    let { getappbyuser } = appStore;
+
+    onMounted(() => {
+      setTimeout(() => {
+        getappbyuser()
+      }, 1000);
+    });
+
+    return { appStore };
   }
-}
+};
 </script>
 
 <template>
