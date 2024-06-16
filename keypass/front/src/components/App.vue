@@ -20,7 +20,7 @@
     </td>
     <td>
       <div class="placement-logo" :id="`app-comment-${app.IDAPP}`">
-        <p>{{ app.comment || 'N/A' }}</p>
+        <p>{{ app.COMMENTAIRE || 'N/A' }}</p>
         <img src="./../assets/img/copie.webp" alt="copie" @click="copierTexte(`app-comment-${app.IDAPP}`)" class="copie">
       </div>
     </td>

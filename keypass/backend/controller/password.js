@@ -18,56 +18,55 @@ function addapp(req, res) {
 
     console.log(req.body)
     
-    var queryStr = 'INSERT INTO `ENTREPRISE` ( `NOMENTREPRISE`, `TICKETENTREPRISE`) VALUES ( ?, ?)';
-    var queryStr2 = 'INSERT INTO `SUIVRE` (`IDCONNCTION `, `IDENTREPRIS`) VALUES (?, ?)'
-    connection.connect();
+    var queryStr = 'INSERT INTO `ENTREPRISE` ( `IDUTILISTEUR`, `NOMAPP`,`UTILISATEURAPP`,`COMMENTAIRE`,`MOTPASSAPP`) VALUES ( ?, ?,?,?)';
+   
     
     connection.query(queryStr, [req.body.utilisateurID, req.body.utilisateurPSEUDO, req.body.NOMUTILISATEUR, req.body.utilisateurBIRTHDAY, req.body.utilisateurPASSWORD, req.body.utilisateurROLE, req.body.utilisateurPREMIUM], function (error, results, fields) {
-       if (error) {
-          console.error('Une erreur est survenue lors de la requête à la base de données:', error);
-          res.status(500).json({ error: "Une erreur interne est survenue" });
-          return;
-       }
-      
-       res.status(200).json({ message: "Utilisateur enregistré avec succès" });
+      if (error) {
+         console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+         res.status(500).json({ error: "Une erreur interne est survenue" });
+         return;
+      }
+   
+      res.status(200).json({ message: "Utilisateur enregistré avec succès" });
     });
 
     connection.query(queryStr, [req.body.utilisateurID, req.body.utilisateurPSEUDO, req.body.NOMUTILISATEUR, req.body.utilisateurBIRTHDAY, req.body.utilisateurPASSWORD, req.body.utilisateurROLE, req.body.utilisateurPREMIUM], function (error, results, fields) {
-        if (error) {
-           console.error('Une erreur est survenue lors de la requête à la base de données:', error);
-           res.status(500).json({ error: "Une erreur interne est survenue" });
-           return;
-        }
-       
-        res.status(200).json({ message: "Utilisateur enregistré avec succès" });
+      if (error) {
+         console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+         res.status(500).json({ error: "Une erreur interne est survenue" });
+         return;
+      }
+      
+      res.status(200).json({ message: "Utilisateur enregistré avec succès" });
      });
    
     connection.end();
 }
 
 function getapp(req, res){
-    var connect = mysql.createConnection(connectionOptions);
+   var connect = mysql.createConnection(connectionOptions);
 
-    var query = 'SELECT * from `APP`';
+   var query = 'SELECT * from `APP`';
 
-    connect.connect();
+   connect.connect();
 
-    connect.query(query, function (error, results, fields) {
+   connect.query(query, function (error, results, fields) {
  
-        if (error) {
-           console.error('Une erreur est survenue lors de la requête à la base de données:', error);
-           res.status(500).json({ error: "Une erreur interne est survenue" });
-           return;
-        }
-        if (results.length == 0) {
-           res.status(404).json({ message: "Aucun APP trouvé" });
-           return;
-        }
+       if (error) {
+          console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+          res.status(500).json({ error: "Une erreur interne est survenue" });
+          return;
+       }
+       if (results.length == 0) {
+          res.status(404).json({ message: "Aucun APP trouvé" });
+          return;
+       }
 
-           res.status(200).json(results);
-    });
-      
-    connect.end();
+          res.status(200).json(results);
+   });
+     
+   connect.end();
 }
 
 function getappid(req, res){
