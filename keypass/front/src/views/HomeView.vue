@@ -1,10 +1,9 @@
 <template>
   <div>
-    <button @click="refreshData">Actualiser les données</button>
     <table>
       <thead>
         <tr>
-          <th>Nom de l'application</th>
+          <th>Lien</th>
           <th>Nom d'utilisateur</th>
           <th>Mots de passe</th>
           <th>Commentaire</th>
@@ -41,7 +40,6 @@ export default {
     const fetchData = () => {
       yuserId.value = localStorage.getItem('userId');
       if (yuserId.value) {
-        console.log('http://ricardonunesemilio.fr:8005/getappid/${yuserId.value}')
         axios.get(`http://ricardonunesemilio.fr:8005/getappid/${yuserId.value}`)
           .then(response => {
             state.app = response.data;

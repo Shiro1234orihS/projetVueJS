@@ -17,7 +17,7 @@ function addapp(req, res) {
 
     console.log(req.body);
 
-    var queryStr = 'INSERT INTO `ENTREPRISE` (`IDUTILISTEUR`, `NOMAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?, ?, ?, ?)';
+    var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`, `NOMAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?, ?, ?, ?)';
 
     connection.query(queryStr, [req.body.IDUTILISTEUR, req.body.NOMAPP, req.body.COMMENTAIRE, req.body.MOTPASSAPP], function (error, results, fields) {
         if (error) {

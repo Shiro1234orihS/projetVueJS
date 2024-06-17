@@ -13,18 +13,19 @@ export const userStore = defineStore('user', () => {
 
   function login(auth, onSuccess) {
     axios.post(url + "login", auth).then(response => {
-      if (response.data) {
-        const userData = response.data[0];
-        user.value = response.data;
-        console.log("Connexion réussie", user.value);
-        localStorage.setItem('userId', userData.IDCONNCTION); // Stocker l'ID de l'utilisateur
-        console.log(localStorage.getItem('userId'));
-        if (onSuccess) onSuccess();
-      }
+        if (response.data && response.data.length > 0) {
+            const userData = response.data[0]; // Récupérer le premier (et unique) objet utilisateur
+            user.value = userData;
+            console.log("Connexion réussie", user.value);
+            localStorage.setItem('userId', userData.IDUTILISTEUR); // Stocker l'ID de l'utilisateur
+            console.log(localStorage.getItem('userId'));
+            if (onSuccess) onSuccess();
+        }
     }).catch(error => {
-      console.error("Erreur de connexion", error);
+        console.error("Erreur de connexion", error);
     });
-  }
+}
+
 
 
 
