@@ -17,9 +17,9 @@ function addapp(req, res) {
 
     console.log(req.body);
 
-    var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`, `NOMAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?, ?, ?, ?)';
+    var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`, `NOMAPP`,`UTILISATEURAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?,?, ?, ?, ?)';
 
-    connection.query(queryStr, [req.body.IDUTILISTEUR, req.body.NOMAPP, req.body.COMMENTAIRE, req.body.MOTPASSAPP], function (error, results, fields) {
+    connection.query(queryStr, [req.body.IDUTILISTEUR, req.body.NOMAPP,req.body.UTILISATEURAPP, req.body.COMMENTAIRE, req.body.MOTPASSAPP], function (error, results, fields) {
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });

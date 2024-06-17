@@ -54,6 +54,7 @@ const generatePassword = () => {
 const setPassword = () => {
   const passwordInput = document.getElementById("input-pass");
   passwordInput.value = generatePassword();
+  passApp.value = passwordInput.value;
 };
 
 function newApp  ()  {
@@ -63,6 +64,7 @@ function newApp  ()  {
   app.postapp({
     IDUTILISTEUR : localStorage.getItem('userId'),
     NOMAPP: linkApp.value,
+    UTILISATEURAPP : userApp.value,
     COMMENTAIRE : commentApp.value,
     MOTPASSAPP : passApp.value
   })
