@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
-
+import { useAppStore } from './stores/app';
 
 const route = useRoute();
 const hiddenButtonsVisible = ref(false);
@@ -9,6 +9,16 @@ const nombredelettre = ref(12);
 const includeSpecialChars = ref(false);
 const includeUppercase = ref(false);
 const includeNumbers = ref(false);
+const app = useAppStore();
+
+
+const linkApp = ref("");
+const userApp = ref("");
+const passApp = ref("");
+const commentApp = ref("");
+
+
+
 
 const isConnexionView = computed(() => {
   return route.name !== 'connexion';
@@ -45,6 +55,19 @@ const setPassword = () => {
   const passwordInput = document.getElementById("input-pass");
   passwordInput.value = generatePassword();
 };
+
+function newApp  ()  {
+  const yuserId = ref(null)
+  yuserId.value = localStorage.getItem('userId');
+  console.log( yuserId.value,linkApp.value,commentApp.value,passApp.value);
+  app.postapp({
+    IDUTILISTEUR : localStorage.getItem('userId'),
+    NOMAPP: linkApp.value,
+    COMMENTAIRE : commentApp.value,
+    MOTPASSAPP : passApp.value
+  })
+  
+}
 </script>
 
 <template>
@@ -62,14 +85,12 @@ const setPassword = () => {
     <div v-show="hiddenButtonsVisible" id="hidden-pass">
             <button @click="toggleHiddenButtons">❌</button>
             <div>
-                <p>Nom de l'application</p>
-                <input type="text">
                 <p>Lien</p>
-                <input type="text">
+                <input v-model="linkApp" type="text">
                 <p>Nom d'utilisateur</p>
-                <input type="text">
+                <input v-model="userApp"type="text">
                 <p>Mot de passe</p>
-                <input type="password" id="input-pass">
+                <input type="password" v-model ="passApp" id="input-pass">
                 <div class="input">
                     <input type="checkbox" v-model="includeSpecialChars"><p>Caractères spéciaux</p>
                     <input type="checkbox" v-model="includeUppercase"><p>Majuscule</p>
@@ -78,9 +99,9 @@ const setPassword = () => {
                 </div>
                 <button @click="setPassword">Génerer un mots de passe</button>
                 <p id="comment">Commentaire</p>
-                <input type="text">
+                <input type="text" v-model="commentApp">
             </div>
-            <button>Nouveau mot de passe</button>
+            <button @click="newApp">Nouveau mot de passe</button>
         </div>
     <RouterView/>
  </div>

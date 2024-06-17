@@ -41,6 +41,7 @@ export default {
     const fetchData = () => {
       yuserId.value = localStorage.getItem('userId');
       if (yuserId.value) {
+        console.log('http://ricardonunesemilio.fr:8005/getappid/${yuserId.value}')
         axios.get(`http://ricardonunesemilio.fr:8005/getappid/${yuserId.value}`)
           .then(response => {
             state.app = response.data;

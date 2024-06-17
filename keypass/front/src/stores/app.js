@@ -21,6 +21,16 @@ export const useAppStore = defineStore('app', () => {
       console.error("Erreur de connexion", error);
     }
   }
-
-  return { app, getappbyuser };
+  function postapp(auth, onSuccess){
+    const response =  axios.post(url+"addapp",auth).then(response =>{
+      if (response.data) {
+        console.log("création réussie");
+        if (onSuccess) onSuccess();
+      }
+    }).catch(error => {
+        console.error("Erreur de connexion", error);
+      });
+  }
+  
+  return { app, getappbyuser,postapp  };
 });
