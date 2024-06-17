@@ -72,115 +72,252 @@ function newApp  ()  {
 
 <template>
  <div>
-    <header v-if="isConnexionView">
-        <nav>
-            <button @click="toggleHiddenButtons">Ajouter un mots de passe</button>
-            <div class="recherche">
-                <input type="text">
-                <button>Recherche</button>
-            </div>
-            <button class="profile-button">Profil</button>
-        </nav>
-    </header>
-    <div v-show="hiddenButtonsVisible" id="hidden-pass">
-            <button @click="toggleHiddenButtons">❌</button>
-            <div>
-                <p>Lien</p>
-                <input v-model="linkApp" type="text">
-                <p>Nom d'utilisateur</p>
-                <input v-model="userApp"type="text">
-                <p>Mot de passe</p>
-                <input type="password" v-model ="passApp" id="input-pass">
-                <div class="input">
-                    <input type="checkbox" v-model="includeSpecialChars"><p>Caractères spéciaux</p>
-                    <input type="checkbox" v-model="includeUppercase"><p>Majuscule</p>
-                    <input type="checkbox" v-model="includeNumbers"><p>Nombre</p>
-                    <input id="nb" type="number" v-model="nombredelettre"><p>Nombre de caractères</p>
+        <header v-if="isConnexionView">
+            <nav>
+                <button @click="toggleHiddenButtons">Ajouter un mot de passe</button>
+                <div class="recherche">
+                    <input type="text">
+                    <button>Recherche</button>
                 </div>
-                <button @click="setPassword">Génerer un mots de passe</button>
-                <p id="comment">Commentaire</p>
-                <input type="text" v-model="commentApp">
+                <button class="profile-button">Profil</button>
+            </nav>
+        </header>
+        <div v-show="hiddenButtonsVisible" id="hidden-pass">
+            <button @click="toggleHiddenButtons">❌</button>
+
+            <label>
+                <input v-model="linkApp" class="input" type="text" placeholder="" required="">
+                <span>Lien</span>
+            </label>
+
+            <label>
+                <input v-model="userApp" class="input" type="text" placeholder="" required="">
+                <span>Nom d'utilisateur</span>
+            </label>
+
+            <label>
+                <input type="password" class="input" v-model="passApp" id="input-pass" placeholder="" required="">
+                <span>Mot de passe</span>
+            </label>
+
+            <div class="input">
+                <div>
+                    <input type="checkbox" class="check" v-model="includeSpecialChars">
+                    <p>Caractères spéciaux</p>
+                </div>
+
+                <div>
+                    <input type="checkbox" class="check" v-model="includeUppercase">
+                    <p>Majuscule</p>
+                </div>
+
+                <div>
+                    <input type="checkbox" class="check" v-model="includeNumbers">
+                    <p>Nombre</p>
+                </div>
+
+                <div>
+                    <input id="nb" type="number" v-model="nombredelettre">
+                    <p>Nombre de caractères</p>
+                </div>
             </div>
+            <button @click="setPassword">Générer un mot de passe</button>
+            <label>
+                <input type="text" class="input" v-model="commentApp" placeholder="" required="">
+                <span>Commentaire</span>
+            </label>
             <button @click="newApp">Nouveau mot de passe</button>
         </div>
-    <RouterView/>
- </div>
- <div v-show="hiddenButtonsVisible" class="overlay"></div>
+        <RouterView/>
+    </div>
+    <div v-show="hiddenButtonsVisible" class="overlay"></div>
+
 </template>
 
 <style scoped>
-/* Global Styles */
-header {
-    background: rgb(76, 76, 212);
-    height: 75px;
-    position: relative;
-}
+ /* Global Styles */
+ header {
+            background: #2C3E50; /* Bleu Foncé */
+            height: 75px;
+            position: relative;
+        }
 
-/* Navigation Styles */
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-}
+        /* Navigation Styles */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
 
-.menu {
-    display: flex;
-    gap: 20px;
-    flex-grow: 1;
-    justify-content: center;
-    align-items: center;
-}
+        .menu {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+            justify-content: center;
+            align-items: center;
+        }
 
-/* Profile Button Styles */
-.profile-button {
-    width: 60px;
-    height: 60px;
-    margin-right: 20px;
-    border-radius: 100%;
-    border-color: #E74C3C;
-}
+        /* Profile Button Styles */
+        .profile-button {
+            width: 60px;
+            height: 60px;
+            margin-right: 20px;
+            border-radius: 100%;
+            border: 2px solid #E74C3C; /* Rouge */
+        }
 
-/* Hidden Password Section Styles */
-#hidden-pass {
-    position: fixed;
-    text-align: center;
-    margin-left: 25%;
-    width: 50%;
-    background-color: rgba(198, 45, 45, 0.84);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 2;
-}
+        /* Hidden Password Section Styles */
+        #hidden-pass {
+            position: fixed;
+            text-align: center;
+            left: 25%;
+            width: 50%;
+            background-color: rgba(52, 152, 219, 0.84); /* Bleu Clair */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centrer horizontalement les éléments */
+            gap: 10px;
+            z-index: 2;
+            padding: 20px;
+            border-radius: 10px;
+        }
 
-/* Overlay Styles */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 0;
-}
+        /* Input and Form Styles */
+        #input-pass {
+            margin: 0;
+        }
 
-/* Input and Form Styles */
-#input-pass {
-    margin: 0;
-}
+        .input {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
 
-.input {
-    margin: 0 0 0 1px;
-    display: flex;
-}
+        .input div {
+            display: flex;
+            align-items: center;
+        }
 
-#comment {
-    margin-top: 0;
-}
+        #nb {
+            width: 50px;
+            height: 30px;
+            color: #2C3E50; /* Bleu Foncé */
+            background-color: #ECF0F1; /* Gris Clair */
+        }
 
-#nb {
-    width: 30px;
-    height: 30px;
-}
+        /* Checkbox Styles */
+        .check {
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+            appearance: none;
+            background-color: #bbb;
+            transition: all .3s;
+        }
+
+        .check::before {
+            content: '';
+            position: absolute;
+            border: solid #fff;
+            display: block;
+            width: .3em;
+            height: .6em;
+            border-width: 0 .2em .2em 0;
+            z-index: 1;
+            opacity: 0;
+            right: calc(50% - .3em);
+            top: calc(50% - .6em);
+            transform: rotate(0deg);
+            transition: all .3s;
+            transform-origin: center center;
+        }
+
+        .check:checked {
+            animation: a .3s ease-in forwards;
+            background-color: #2ECC71; /* Vert */
+        }
+
+        .check:checked::before {
+            opacity: 1;
+            transform: rotate(405deg);
+        }
+
+        @keyframes a {
+            0% {
+                opacity: 1;
+                transform: scale(1) rotateY(0deg);
+            }
+
+            50% {
+                opacity: 0;
+                transform: scale(.8) rotateY(180deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) rotateY(360deg);
+            }
+        }
+
+        /* CSS pour les inputs actuels */
+        label {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centrer horizontalement les labels */
+            width: 100%;
+            max-width: 300px; /* Largeur maximale des inputs */
+            margin: 10px 0;
+        }
+
+        label .input {
+            background-color: #333;
+            color: #fff;
+            width: 100%;
+            padding: 20px 10px 5px 10px;
+            outline: 0;
+            border: 1px solid rgba(105, 105, 105, 0.397);
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        label .input + span {
+            color: rgba(255, 255, 255, 0.5);
+            position: absolute;
+            left: 10px;
+            top: 5px;
+            font-size: 0.9em;
+            cursor: text;
+            transition: 0.3s ease;
+        }
+
+        label .input:placeholder-shown + span {
+            top: 22.5px;
+            font-size: 0.9em;
+        }
+
+        label .input:focus + span,
+        label .input:valid + span {
+            color: #00bfff;
+            top: 5px;
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+
+        .input {
+            font-size: medium;
+        }
+
+        /* Overlay Styles */
+         .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 0;
+        } 
 </style>
