@@ -2,6 +2,7 @@
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import { useAppStore } from './stores/app';
+import { useRouter } from 'vue-router'
 
 const route = useRoute();
 const hiddenButtonsVisible = ref(false);
@@ -10,6 +11,7 @@ const includeSpecialChars = ref(false);
 const includeUppercase = ref(false);
 const includeNumbers = ref(false);
 const app = useAppStore();
+const router = useRouter();
 
 
 const linkApp = ref("");
@@ -68,7 +70,8 @@ function newApp  ()  {
     COMMENTAIRE : commentApp.value,
     MOTPASSAPP : passApp.value
   })
-  
+  router.push({ name: 'loader' }); 
+
 }
 </script>
 
