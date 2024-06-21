@@ -32,3 +32,35 @@ document.getElementById('myButton').addEventListener('click', () => {
     alert('Failed to send data');
   });
 });
+
+
+
+document.getElementById('connection').addEventListener('click',()=>{
+
+  const username = document.querySelector('input[name="name"]');
+  const password = document.querySelector('input[name="pass"]');
+
+  const data = {
+    name : username,
+    password : password
+  }
+
+  // Envoyer les données à l'API
+  fetch('http://ricardonunesemilio.fr:8005/login', { // Remplacez par votre URL d'API
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    alert('Data sent successfully');
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    alert('Failed to send data');
+  });
+});
+
