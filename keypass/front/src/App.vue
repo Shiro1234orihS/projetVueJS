@@ -23,7 +23,7 @@ const commentApp = ref("");
 
 
 const isConnexionView = computed(() => {
-  if(route.name !== 'connexion' ||route.name !== 'accountcreation')
+  if(route.name == 'connexion' ||route.name == 'accountcreation')
     return false ;
   else 
     return true

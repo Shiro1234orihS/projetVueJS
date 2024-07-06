@@ -200,7 +200,7 @@ function logout() {
 }
 
 .inscription {
-  position: absolute;
+
   padding: 10px 0;
   font-size: 16px;
   color: #fff;

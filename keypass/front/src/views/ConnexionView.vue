@@ -9,13 +9,39 @@ const router = useRouter();
 const name = ref("")
 const password = ref("")
 
+const nameError = ref("")
+const passwordError = ref("")
+const confirmPasswordError = ref("")
+
+function validateForm() {
+  let isValid = true
+
+  if (name.value.trim() === "") {
+    nameError.value = "Le nom d'utilisateur est requis."
+    isValid = false
+  } else {
+    nameError.value = ""
+  }
+
+  if (password.value.trim() === "") {
+    passwordError.value = "Le mot de passe est requis."
+    isValid = false
+  } else {
+    passwordError.value = ""
+  }
+
+  return isValid
+}
+
 function login() {
-  user.login({
-    name: name.value,
-    password: password.value
-  }, () => {
-    router.push({ name: 'home' }); // Redirection après la connexion
-  });
+  if (validateForm()) {
+    user.login({
+      name: name.value,
+      password: password.value
+    }, () => {
+      router.push({ name: 'home' }); // Redirection après la connexion
+    });
+  }
 }
 
 function logout() {
@@ -26,12 +52,14 @@ function logout() {
 <template>
   <main>
     <div class="login-box">
+      <span v-if="nameError" class="error">{{ nameError }}</span>
       <div class="user-box">
-        <input type="text" required="" v-model="name">
+        <input type="text" required  v-model="name">
         <label>Nom utilisateur</label>
       </div>
+      <span v-if="passwordError" class="error">{{ passwordError }}</span>
       <div class="user-box">
-        <input type="password" required="" v-model="password">
+        <input type="password" required  v-model="password">
         <label>Mot de passe</label>
       </div>
       <center>
@@ -105,7 +133,7 @@ function logout() {
   text-transform: uppercase;
   overflow: hidden;
   transition: .5s;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-bottom: 10px;
   letter-spacing: 4px;
 }
@@ -145,7 +173,6 @@ function logout() {
 }
 
 .inscription {
-  position: absolute;
   padding: 10px 0;
   font-size: 16px;
   color: #fff;
@@ -155,5 +182,13 @@ function logout() {
 
 .inscriptiona {
   color: #3498DB; /* Bleu Clair */
+}
+
+.error {
+  color: #E74C3C; /* Rouge */
+  font-size: 12px;  
+  bottom: -20px;
+  left: 0;
+
 }
 </style>
