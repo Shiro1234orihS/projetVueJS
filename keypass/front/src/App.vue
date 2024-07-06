@@ -23,7 +23,10 @@ const commentApp = ref("");
 
 
 const isConnexionView = computed(() => {
-  return route.name !== 'connexion';
+  if(route.name !== 'connexion' ||route.name !== 'accountcreation')
+    return false ;
+  else 
+    return true
 });
 
 const toggleHiddenButtons = () => {
