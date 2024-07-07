@@ -7,6 +7,7 @@
           <th>Nom d'utilisateur</th>
           <th>Mots de passe</th>
           <th>Commentaire</th>
+          <th>Gestion </th>
         </tr>
       </thead>
       <tbody>

@@ -74,7 +74,7 @@ function newApp  ()  {
     MOTPASSAPP : passApp.value
   })
   router.push({ name: 'loader' }); 
-
+  hiddenButtonsVisible.value = !hiddenButtonsVisible.value;
 }
 </script>
 

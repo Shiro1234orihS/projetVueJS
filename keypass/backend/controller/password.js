@@ -2,100 +2,83 @@
 var mysql = require('mysql');
 
 // Définit les options de connexion à la base de données MySQL
-// Utilise les variables d'environnement si disponibles, sinon utilise les valeurs par défaut
 var connectionOptions = {
     host: 'localhost',
     port: '3306',
     user: 'root',
-    password: 'root',
+    password: 'bsRt(bP)*h5yTB!A',
     database: 'keypass'
 };
 
-// Fonction d'inscription
+// Création d'un pool de connexions MySQL pour une meilleure gestion des ressources.
+const pool = mysql.createPool(connectionOptions);
+
+// Fonction d'ajout d'application
 function addapp(req, res) {
-    var connection = mysql.createConnection(connectionOptions);
-
     console.log(req.body);
+    var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`, `NOMAPP`, `UTILISATEURAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?, ?, ?, ?, ?)';
 
-    var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`, `NOMAPP`,`UTILISATEURAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?,?, ?, ?, ?)';
-
-    connection.query(queryStr, [req.body.IDUTILISTEUR, req.body.NOMAPP,req.body.UTILISATEURAPP, req.body.COMMENTAIRE, req.body.MOTPASSAPP], function (error, results, fields) {
+    pool.query(queryStr, [req.body.IDUTILISTEUR, req.body.NOMAPP, req.body.UTILISATEURAPP, req.body.COMMENTAIRE, req.body.MOTPASSAPP], function (error, results, fields) {
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
             return;
         }
-
-        res.status(200).json({ message: "Utilisateur enregistré avec succès" });
+        res.status(200).json({ message: "Application ajoutée avec succès" });
     });
-
-    connection.end();
 }
 
 // Fonction pour obtenir toutes les applications
 function getapp(req, res) {
-    var connection = mysql.createConnection(connectionOptions);
-
     var query = 'SELECT * FROM `APP`';
 
-    connection.connect(error => {
+    pool.query(query, function (error, results, fields) {
         if (error) {
-            console.error('Une erreur est survenue lors de la connexion à la base de données:', error);
+            console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
             return;
+        } else if (results.length === 0) {
+            res.status(404).json({ message: "Aucune application trouvée" });
+        } else {
+            res.status(200).json(results);
         }
-
-        connection.query(query, function (error, results, fields) {
-            if (error) {
-                console.error('Une erreur est survenue lors de la requête à la base de données:', error);
-                res.status(500).json({ error: "Une erreur interne est survenue" });
-            } else if (results.length === 0) {
-                res.status(404).json({ message: "Aucun APP trouvé" });
-            } else {
-                res.status(200).json(results);
-            }
-
-            connection.end(err => {
-                if (err) {
-                    console.error('Une erreur est survenue lors de la fermeture de la connexion:', err);
-                }
-            });
-        });
     });
 }
 
 // Fonction pour obtenir une application par ID utilisateur
 function getappid(req, res) {
-    var connect = mysql.createConnection(connectionOptions);
-
     var userId = req.params.id; // Supposant que l'ID utilisateur est passé en paramètre de la requête
     var query = 'SELECT * FROM `APP` WHERE `IDUTILISTEUR` = ?';
 
-    connect.connect(error => {
+    pool.query(query, [userId], function (error, results, fields) {
         if (error) {
-            console.error('Une erreur est survenue lors de la connexion à la base de données:', error);
+            console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
-            return;
+        } else if (results.length === 0) {
+            res.status(404).json({ message: "Aucune application trouvée pour cet utilisateur" });
+        } else {
+            res.status(200).json(results);
         }
+    });
+}
 
-        connect.query(query, [userId], function (error, results, fields) {
-            if (error) {
-                console.error('Une erreur est survenue lors de la requête à la base de données:', error);
-                res.status(500).json({ error: "Une erreur interne est survenue" });
-            } else if (results.length === 0) {
-                res.status(404).json({ message: "Aucun APP trouvé" });
-            } else {
-                res.status(200).json(results);
-            }
+// Fonction de suppression d'application
+function delectepass(req, res) {
+    var appId = req.params.id; // Supposant que l'ID de l'application est passé en paramètre de la requête
+    var query = 'DELETE FROM `APP` WHERE `IDAPP` = ?';
 
-            connect.end(err => {
-                if (err) {
-                    console.error('Une erreur est survenue lors de la fermeture de la connexion:', err);
-                }
-            });
-        });
+    pool.query(query, [appId], function (error, results, fields) {
+        if (error) {
+            console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+            res.status(500).json({ error: "Une erreur interne est survenue" });
+        } else if (results.affectedRows === 0) {
+            res.status(404).json({ message: "Aucune application trouvée à supprimer" });
+        } else {
+            res.status(200).json({ message: "Application supprimée avec succès" });
+        }
+        console.log(query)
     });
 }
 
 // Exporte les fonctions pour qu'elles puissent être utilisées dans d'autres fichiers du projet
-module.exports = { addapp, getapp, getappid };
+module.exports = { addapp, getapp, getappid, delectepass };
