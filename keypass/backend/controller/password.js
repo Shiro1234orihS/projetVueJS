@@ -80,5 +80,30 @@ function delectepass(req, res) {
     });
 }
 
+// Fonction de mise à jour d'application
+function updateApp(req, res) {
+    const { IDAPP, NOMAPP, COMMENTAIRE, MOTPASSAPP } = req.body;
+
+    if (!IDAPP || !NOMAPP || !COMMENTAIRE || !MOTPASSAPP) {
+        return res.status(400).json({ error: "Tous les champs sont requis" });
+    }
+
+    var queryStr = 'UPDATE `APP` SET `NOMAPP` = ?, `COMMENTAIRE` = ?, `MOTPASSAPP` = ? WHERE `IDAPP` = ?';
+
+    pool.query(queryStr, [NOMAPP, COMMENTAIRE, MOTPASSAPP, IDAPP], function (error, results, fields) {
+        if (error) {
+            console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+            res.status(500).json({ error: "Une erreur interne est survenue" });
+            return;
+        }
+
+        if (results.affectedRows === 0) {
+            res.status(404).json({ message: "Aucune application trouvée pour mise à jour" });
+        } else {
+            res.status(200).json({ message: "Application mise à jour avec succès" });
+        }
+    });
+}
+
 // Exporte les fonctions pour qu'elles puissent être utilisées dans d'autres fichiers du projet
-module.exports = { addapp, getapp, getappid, delectepass };
+module.exports = { addapp, getapp, getappid, delectepass, updateApp };

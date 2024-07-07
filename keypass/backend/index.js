@@ -60,7 +60,7 @@ app.get('/app', Appcontroller.getapp); // Récupération de la liste des apps
 app.get('/getappid/:id', Appcontroller.getappid); // Récupération d'une app par ID
 app.post('/addapp', Appcontroller.addapp); // Ajout d'une nouvelle app
 app.delete('/deleteapp/:id', Appcontroller.delectepass); // Suppression d'une app par ID
-
+app.put('/updateapp', Appcontroller.updateApp); // Mise à jour d'une app
 
 // Démarrage du serveur sur le port spécifié
 app.listen(port, function () {
