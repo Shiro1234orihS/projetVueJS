@@ -1,9 +1,9 @@
 <template>
   <div id="Global">
-    <div id="gauche">
-      <h1>test</h1>
+    <div id="gauche"> 
+      <Fichier/>
     </div>
-    <div  id="droite">
+    <div id="droite">
       <table>
         <thead>
           <tr>
@@ -11,7 +11,7 @@
             <th>Nom d'utilisateur</th>
             <th>Mots de passe</th>
             <th>Commentaire</th>
-            <th>Gestion </th>
+            <th>Gestion</th>
           </tr>
         </thead>
         <tbody>
@@ -25,20 +25,19 @@
       </table>
     </div>
   </div>
- 
-  
-  
 </template>
 
 <script>
 import { ref, onMounted, reactive } from 'vue';
 import axios from 'axios';
 import App from '@/components/App.vue'; // Assurez-vous que le chemin est correct
+import Fichier from '@/components/Fichier.vue'; // Assurez-vous que le chemin est correct
 
 export default {
   name: 'AppList',
   components: {
     App,
+    Fichier,
   },
   setup() {
     const yuserId = ref(null);
@@ -79,20 +78,43 @@ export default {
 
 <style scoped>
 table {
-  border: 1px solid black;
+  border: 1px solid #2C3E50; /* Bleu Foncé */
   border-collapse: collapse;
+  width: 100%;
+  background-color: #ECF0F1; /* Gris Clair */
+  color: #2C3E50; /* Bleu Foncé */
+}
+
+th, td {
+  border: 1px solid #2C3E50; /* Bleu Foncé */
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498DB; /* Bleu Clair */
+  color: white;
+}
+
+#Global {
   width: 100%;
 }
 
-#Global
-{
-  width:100%;
-}
 #Global #gauche {
-  float:left;
-  width:15%;
+  float: left;
+  width: 14%;
+  background-color: #2C3E50; /* Bleu Foncé */
+  color: white;
+  padding: 1px;
+  margin-top: 1px;
 }
+
 #Global #droite {
-  margin-left:15%   
+  margin-left: 15%;
+  background-color: #ECF0F1; /* Gris Clair */
+  padding: 1px;
+  margin-top: 10px;
 }
+
+
 </style>
