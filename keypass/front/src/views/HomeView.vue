@@ -1,25 +1,33 @@
 <template>
-  <div>
-    <table>
-      <thead>
-        <tr>
-          <th>Lien</th>
-          <th>Nom d'utilisateur</th>
-          <th>Mots de passe</th>
-          <th>Commentaire</th>
-          <th>Gestion </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="pass in state.app" :key="pass.IDAPP">
-          <App :app="pass" />
-        </tr>
-        <tr v-if="state.app.length === 0">
-          <td colspan="4">Aucune application trouvée.</td>
-        </tr>
-      </tbody>
-    </table>
+  <div id="Global">
+    <div id="gauche">
+      <h1>test</h1>
+    </div>
+    <div  id="droite">
+      <table>
+        <thead>
+          <tr>
+            <th>Lien</th>
+            <th>Nom d'utilisateur</th>
+            <th>Mots de passe</th>
+            <th>Commentaire</th>
+            <th>Gestion </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="pass in state.app" :key="pass.IDAPP">
+            <App :app="pass" />
+          </tr>
+          <tr v-if="state.app.length === 0">
+            <td colspan="4">Aucune application trouvée.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+ 
+  
+  
 </template>
 
 <script>
@@ -70,8 +78,21 @@ export default {
 </script>
 
 <style scoped>
-table, th, td {
+table {
   border: 1px solid black;
   border-collapse: collapse;
+  width: 100%;
+}
+
+#Global
+{
+  width:100%;
+}
+#Global #gauche {
+  float:left;
+  width:15%;
+}
+#Global #droite {
+  margin-left:15%   
 }
 </style>
