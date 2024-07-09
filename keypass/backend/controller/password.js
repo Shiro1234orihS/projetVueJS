@@ -89,8 +89,9 @@ function updateApp(req, res) {
     }
 
     var queryStr = 'UPDATE `APP` SET `NOMAPP` = ?, `COMMENTAIRE` = ?, `MOTPASSAPP` = ? WHERE `IDAPP` = ?';
-
+    
     pool.query(queryStr, [NOMAPP, COMMENTAIRE, MOTPASSAPP, IDAPP], function (error, results, fields) {
+        
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
