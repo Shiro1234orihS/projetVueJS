@@ -79,7 +79,7 @@
       <input type="text" class="input" v-model="commentApp" placeholder="" required="">
       <span>Commentaire</span>
     </label>
-    <button @click="newApp">Modifier le mot de passe</button>
+    <button @click="updateApp">Modifier le mot de passe</button>
   </div>
   <div v-show="hiddenButtonsVisible2" class="overlay"></div>
   <div v-show="hiddenButtonsVisible" class="overlay"></div>
@@ -125,12 +125,6 @@ export default {
         router.push({ name: 'loader' });
       });
     };
-    
-    const updateApp = () => {
-      // Appelle la fonction pour mettre à jour l'application ici
-      hiddenButtonsVisible2.value = false;
-      alert('Mot de passe mis à jour !');
-    };
 
     const annulerDelete = () => {
       hiddenButtonsVisible.value = false;
@@ -169,6 +163,21 @@ export default {
     // Function to set the generated password to the input field
     const setPassword = () => {
       passApp.value = generatePassword();
+    };
+
+    const updateApp = () => {
+      const payload = {
+        IDAPP: props.app.IDAPP,
+        NOMAPP: linkApp.value,
+        UTILISATEURAPP: userApp.value,
+        COMMENTAIRE: commentApp.value,
+        MOTPASSAPP: passApp.value
+      };
+      appStore.updateApp(payload, () => {
+        alert('Mot de passe mis à jour !');
+        hiddenButtonsVisible2.value = false;
+        router.push({ name: 'loader' });
+      });
     };
 
     return {

@@ -47,22 +47,17 @@ export const useAppStore = defineStore('app', () => {
         });
   }
 
-  function updateApp(IDAPP, NOMAPP, COMMENTAIRE, MOTPASSAPP, onSuccess) {
-    axios.put(url + "updateapp", {
-        IDAPP: IDAPP,
-        NOMAPP: NOMAPP,
-        COMMENTAIRE: COMMENTAIRE,
-        MOTPASSAPP: MOTPASSAPP
-    })
-    .then(response => {
+  function updateApp(auth, onSuccess) {
+    axios.put(url + "updateapp", auth)
+      .then(response => {
         if (response.data) {
-            console.log("Mise à jour réussie");
-            if (onSuccess) onSuccess();
+          console.log("Mise à jour réussie");
+          if (onSuccess) onSuccess();
         }
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error("Erreur de connexion", error);
-    });
+      });
   }
 
   return { app, getappbyuser,postapp,delectepass, updateApp};
