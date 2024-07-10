@@ -10,6 +10,8 @@ app.use(express.json()); // Permet de parser les requêtes en JSON. C'est un mid
 // Importation des contrôleurs.
 const Utilisateurcontroller = require('./controller/utilisateurcontroller');
 const Appcontroller = require('./controller/password');
+const Dossiercontroller = require('./controller/dossiercontroller');
+
 
 // Configuration pour éviter les erreurs CORS en autorisant les requêtes de n'importe quelle origine.
 app.use((req, res, next) => {
@@ -61,6 +63,10 @@ app.get('/getappid/:id', Appcontroller.getappid); // Récupération d'une app pa
 app.post('/addapp', Appcontroller.addapp); // Ajout d'une nouvelle app
 app.delete('/deleteapp/:id', Appcontroller.delectepass); // Suppression d'une app par ID
 app.put('/updateapp', Appcontroller.updateApp); // Mise à jour d'une app
+
+// Routes pour la gestion des dossier
+app.get('/dossier', Dossiercontroller.getdossier); // Récupération de la liste des dossier
+app.get('/getdossierid/:id', Dossiercontroller.getdossierid); // Récupération d'une app par ID
 
 // Démarrage du serveur sur le port spécifié
 app.listen(port, function () {
