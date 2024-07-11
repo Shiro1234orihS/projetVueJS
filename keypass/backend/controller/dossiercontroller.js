@@ -32,7 +32,7 @@ function getdossier(req, res) {
 
 // Fonction pour obtenir une application par ID utilisateur
 function getdossierid(req, res) {
-    var query = 'SELECT * FROM `DOSSIER`  ap  JOIN `DETIENT` dt ON ap.IDDOSSIER = dt.IDDOSSIER JOIN `UTILISATEUR`  ut ON ut.IDUTILISTEUR = dt.IDUTILISTEUR WHERE ut.IDUTILISTEUR = ?';
+    var query = 'SELECT NOMDOSSIER FROM `DOSSIER`  ap  JOIN `DETIENT` dt ON ap.IDDOSSIER = dt.IDDOSSIER JOIN `UTILISATEUR`  ut ON ut.IDUTILISTEUR = dt.IDUTILISTEUR WHERE ut.IDUTILISTEUR = ?';
     var userId = req.params.id; 
 
     pool.query(query,[userId], function (error, results, fields) {
@@ -49,30 +49,42 @@ function getdossierid(req, res) {
 }
 
 // Fonction d'ajout d'application
-function addapp(req, res) {
+function adddossier(req, res) {
+    const queryStr1 = 'INSERT INTO `DOSSIER` (`NOMDOSSIER`, `IDPAREND`) VALUES (?, ?)';
+    const queryStr2 = 'SELECT IDDOSSIER FROM DOSSIER WHERE NOMDOSSIER = ?';
+    const queryStr3 = 'INSERT INTO `DETIENT` (`IDDOSSIER`, `IDUTILISTEUR`) VALUES (?, ?)';
 
-    console.log(req.body);
-    var queryStr = 'INSERT INTO `DOSSIER` (`NOMDOSSIER`, `IDPAREND`) VALUES ( ?, ?)';
-    var queryStr2 = 'INSERT INTO `DETIENT` (`IDDOSSIER`, `IDUTILISTEUR`) VALUES ( ?, ?)';
-
-    pool.query(queryStr, [req.body.NOMDOSSIER, req.body.IDPAREND], function (error, results, fields) {
+    pool.query(queryStr1, [req.body.NOMDOSSIER, req.body.IDPAREND], function(error, results, fields) {
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
             return;
         }
-        res.status(200).json({ message: "Application ajoutée avec succès" });
-    });
 
-    pool.query(queryStr2, [req.body.IDDOSSIER, req.body.IDUTILISTEUR], function (error, results, fields) {
-        if (error) {
-            console.error('Une erreur est survenue lors de la requête à la base de données:', error);
-            res.status(500).json({ error: "Une erreur interne est survenue" });
-            return;
-        }
-        res.status(200).json({ message: "Application ajoutée avec succès" });
+        // Récupérer l'ID du dossier nouvellement créé
+        pool.query(queryStr2, [req.body.NOMDOSSIER], function(error, results, fields) {
+            if (error) {
+                console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+                res.status(500).json({ error: "Une erreur interne est survenue" });
+                return;
+            }
+
+            const iddossierBaseDonnes = results[0].IDDOSSIER;
+
+            // Insérer dans la table DETIENT
+            pool.query(queryStr3, [iddossierBaseDonnes, req.body.IDUTILISATEUR], function(error, results, fields) {
+                if (error) {
+                    console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+                    res.status(500).json({ error: "Une erreur interne est survenue" });
+                    return;
+                }
+
+                res.status(200).json({ message: "Dossier ajouté avec succès" });
+            });
+        });
     });
 }
+
 
 
 
@@ -124,4 +136,4 @@ function updateApp(req, res) {
 }
 
 // Exporte les fonctions pour qu'elles puissent être utilisées dans d'autres fichiers du projet
-module.exports = { getdossier , getdossierid};
+module.exports = { getdossier , getdossierid ,adddossier};

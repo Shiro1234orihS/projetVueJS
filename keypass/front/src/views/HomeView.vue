@@ -3,7 +3,7 @@
     <div id="gauche"> 
       <img src="./../assets/img/iconeNewFichier.webp" alt="iconeNewFichier" class="image" @click="toggleHiddenButtons">
 
-      <div v-for="dossier in state.dossier" :key="dossier.IDDOSSIER" >
+      <div v-for="dossier in state.dossier" :key="dossier.IDDOSSIER">
         <Fichier :app="dossier"/>
       </div>
       <div v-if="state.dossier.length === 0">
@@ -37,7 +37,7 @@
     <button @click="toggleHiddenButtons" id="exit">❌</button>
 
     <label>
-      <input v-model="linkApp" class="input" type="text" placeholder="" required="">
+      <input v-model="nomNewDossier" class="input" type="text" placeholder="" required="">
       <span>Nom du dossier</span>
     </label>
 
@@ -53,8 +53,10 @@
 <script>
 import { ref, onMounted, reactive } from 'vue';
 import axios from 'axios';
-import App from '@/components/App.vue'; // Assurez-vous que le chemin est correct
-import Fichier from '@/components/Fichier.vue'; // Assurez-vous que le chemin est correct
+import App from '@/components/App.vue';
+import Fichier from '@/components/Fichier.vue';
+import { useRouter } from 'vue-router';
+import { useDossierStore } from '@/stores/dossier';
 
 export default {
   name: 'AppList',
@@ -68,10 +70,15 @@ export default {
       app: [],
       dossier: [],
     });
+    const router = useRouter();
     const hiddenButtonsVisible = ref(false);
-    
+    const dossierStore = useDossierStore();
+    const nomNewDossier = ref("");
+    const userApp = ref("");
+
+    yuserId.value = localStorage.getItem('userId');
+
     const fetchData = () => {
-      yuserId.value = localStorage.getItem('userId');
       if (yuserId.value) {
         axios.get(`http://ricardonunesemilio.fr:8005/getappid/${yuserId.value}`)
           .then(response => {
@@ -81,7 +88,7 @@ export default {
             console.error(error);
           });
         axios.get(`http://ricardonunesemilio.fr:8005/getdossierid/${yuserId.value}`)
-        .then(response => {
+          .then(response => {
             state.dossier = response.data;
           })
           .catch(error => {
@@ -92,34 +99,41 @@ export default {
       }
     };
 
+    const updateApp = () => {
+     
+      const newDossier = {
+        NOMDOSSIER: nomNewDossier.value,
+        IDPARENT: 1, 
+        IDUTILISATEUR: yuserId.value,
+      };
+      console.log(newDossier)
+      dossierStore.addNewDossier(newDossier).then(() => {
+        fetchData(); // Actualiser les données après l'ajout
+      });
+      hiddenButtonsVisible.value = false; // Masquer le formulaire après l'ajout
+    };
+
     onMounted(() => {
       fetchData();
     });
 
-    const annulerUpdate = () => {
-      hiddenButtonsVisible.value = false;
-    };
-
     const toggleHiddenButtons = () => {
       hiddenButtonsVisible.value = !hiddenButtonsVisible.value;
-      console.log('toggleHiddenButtons called');
-      console.log('hiddenButtonsVisible:', hiddenButtonsVisible.value); // Log de débogage
-    }
-
-    const refreshData = () => {
-      fetchData();
     };
 
     return {
       state,
-      refreshData,
       toggleHiddenButtons,
-      annulerUpdate,
-      hiddenButtonsVisible
+      hiddenButtonsVisible,
+      nomNewDossier,
+      userApp,
+      updateApp,
     };
   },
 };
 </script>
+
+
 
 <style scoped>
 table {

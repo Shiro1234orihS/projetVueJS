@@ -67,6 +67,7 @@ app.put('/updateapp', Appcontroller.updateApp); // Mise à jour d'une app
 // Routes pour la gestion des dossier
 app.get('/dossier', Dossiercontroller.getdossier); // Récupération de la liste des dossier
 app.get('/getdossierid/:id', Dossiercontroller.getdossierid); // Récupération d'une app par ID
+app.post('/adddossier/', Dossiercontroller.adddossier); // Récupération d'une app par ID
 
 // Démarrage du serveur sur le port spécifié
 app.listen(port, function () {
