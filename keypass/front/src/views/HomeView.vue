@@ -4,7 +4,7 @@
       <img src="./../assets/img/iconeNewFichier.webp" alt="iconeNewFichier" class="image" @click="toggleHiddenButtons">
 
       <div v-for="dossier in state.dossier" :key="dossier.IDDOSSIER">
-        <Fichier :app="dossier"/>
+        <Fichier :dossier="dossier"/>
       </div>
       <div v-if="state.dossier.length === 0">
           <p>Vous avez pas dossier</p>
