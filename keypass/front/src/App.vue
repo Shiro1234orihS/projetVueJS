@@ -18,6 +18,7 @@ const linkApp = ref("");
 const userApp = ref("");
 const passApp = ref("");
 const commentApp = ref("");
+const dossierApp = ref("");
 
 
 
@@ -65,12 +66,13 @@ const setPassword = () => {
 function newApp  ()  {
   const yuserId = ref(null)
   yuserId.value = localStorage.getItem('userId');
-  console.log( yuserId.value,linkApp.value,commentApp.value,passApp.value);
+  console.log( yuserId.value,linkApp.value,commentApp.value,dossierApp.value,passApp.value);
   app.postapp({
     IDUTILISTEUR : localStorage.getItem('userId'),
     NOMAPP: linkApp.value,
     UTILISATEURAPP : userApp.value,
     COMMENTAIRE : commentApp.value,
+    Dossier : dossierApp.value,
     MOTPASSAPP : passApp.value
   })
   router.push({ name: 'loader' }); 
@@ -133,6 +135,10 @@ function newApp  ()  {
             <label>
                 <input type="text" class="input" v-model="commentApp" placeholder="" required="">
                 <span>Commentaire</span>
+            </label>
+            <label>
+                <input type="text" class="input" v-model="dossierApp" placeholder="" required="">
+                <span>Nom de dossier</span>
             </label>
             <button @click="newApp">Nouveau mot de passe</button>
         </div>

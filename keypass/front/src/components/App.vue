@@ -115,6 +115,7 @@ export default {
     const suppIcone = () => {
       hiddenButtonsVisible.value = !hiddenButtonsVisible.value;
     };
+    
     const updateIcone = () => {
       hiddenButtonsVisible2.value = !hiddenButtonsVisible2.value;
     };

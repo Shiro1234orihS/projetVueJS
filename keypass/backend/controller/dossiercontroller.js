@@ -50,10 +50,21 @@ function getdossierid(req, res) {
 
 // Fonction d'ajout d'application
 function addapp(req, res) {
-    console.log(req.body);
-    var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`, `NOMAPP`, `UTILISATEURAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?, ?, ?, ?, ?)';
 
-    pool.query(queryStr, [req.body.IDUTILISTEUR, req.body.NOMAPP, req.body.UTILISATEURAPP, req.body.COMMENTAIRE, req.body.MOTPASSAPP], function (error, results, fields) {
+    console.log(req.body);
+    var queryStr = 'INSERT INTO `DOSSIER` (`NOMDOSSIER`, `IDPAREND`) VALUES ( ?, ?)';
+    var queryStr2 = 'INSERT INTO `DETIENT` (`IDDOSSIER`, `IDUTILISTEUR`) VALUES ( ?, ?)';
+
+    pool.query(queryStr, [req.body.NOMDOSSIER, req.body.IDPAREND], function (error, results, fields) {
+        if (error) {
+            console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+            res.status(500).json({ error: "Une erreur interne est survenue" });
+            return;
+        }
+        res.status(200).json({ message: "Application ajoutée avec succès" });
+    });
+
+    pool.query(queryStr2, [req.body.IDDOSSIER, req.body.IDUTILISTEUR], function (error, results, fields) {
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
@@ -87,15 +98,16 @@ function delectepass(req, res) {
 
 // Fonction de mise à jour d'application
 function updateApp(req, res) {
-    const { IDAPP, NOMAPP, COMMENTAIRE, MOTPASSAPP } = req.body;
+    
+    const { NOMDOSSIER, IDPAREND} = req.body;
 
-    if (!IDAPP || !NOMAPP || !COMMENTAIRE || !MOTPASSAPP) {
+    if (!NOMDOSSIER || !IDPAREND ) {
         return res.status(400).json({ error: "Tous les champs sont requis" });
     }
 
-    var queryStr = 'UPDATE `APP` SET `NOMAPP` = ?, `COMMENTAIRE` = ?, `MOTPASSAPP` = ? WHERE `IDAPP` = ?';
+    var queryStr = 'UPDATE `DOSSIER` SET `NOMDOSSIER` = ?, `IDPAREND` = ?';
     
-    pool.query(queryStr, [NOMAPP, COMMENTAIRE, MOTPASSAPP, IDAPP], function (error, results, fields) {
+    pool.query(queryStr, [NOMDOSSIER, IDPAREND], function (error, results, fields) {
         
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);

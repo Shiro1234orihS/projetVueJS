@@ -16,9 +16,25 @@ const pool = mysql.createPool(connectionOptions);
 // Fonction d'ajout d'application
 function addapp(req, res) {
     console.log(req.body);
-    var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`, `NOMAPP`, `UTILISATEURAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?, ?, ?, ?, ?)';
+    var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`,`IDDOSSIER`,`NOMAPP`, `UTILISATEURAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?,?, ?, ?, ?, ?)';
+    var queryStr2 = 'SELECT IDDOSSIER from DOSSIER WHERE NOMDOSSIER like `?`'
+    var iddossier
+    if(req.body.NOMDOSSIER == ''){
+        pool.query(queryStr2,[req.body.NOMDOSSIER], function (error, results, fields) {
+            if (error) {
+                console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+                res.status(500).json({ error: "Une erreur interne est survenue" });
+                return;
+            }
+            iddossier = results[0].IDDOSSIER;
+            
+        });
+    }else{
+        iddossier = null
+    }
+   
 
-    pool.query(queryStr, [req.body.IDUTILISTEUR, req.body.NOMAPP, req.body.UTILISATEURAPP, req.body.COMMENTAIRE, req.body.MOTPASSAPP], function (error, results, fields) {
+    pool.query(queryStr, [req.body.IDUTILISTEUR,iddossier, req.body.NOMAPP, req.body.UTILISATEURAPP, req.body.COMMENTAIRE, req.body.MOTPASSAPP], function (error, results, fields) {
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
