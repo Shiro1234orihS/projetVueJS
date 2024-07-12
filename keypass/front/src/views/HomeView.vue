@@ -2,6 +2,10 @@
   <div id="Global">
     <div id="gauche">
       <img src="./../assets/img/iconeNewFichier.webp" alt="iconeNewFichier" class="image" @click="toggleHiddenButtons">
+      <div id="placement" @click="fetchData">
+        <img src="./../assets/img/fichierOuvert.png" alt="fichierOuvert" class="image">
+        <p>Tous les mots de passes</p>
+      </div>
       <div v-for="dossier in state.dossier" :key="dossier.IDDOSSIER">
         <Fichier :dossier="dossier" @fetch-passwords="fetchPasswords"/>
       </div>
@@ -137,6 +141,7 @@ export default {
       userApp,
       updateApp,
       fetchPasswords,
+      fetchData,
     };
   },
 };
@@ -351,5 +356,10 @@ label .input:valid + span {
   font-size: 24px; /* Ajustez la taille de la croix */
   color: #ff0000; /* Rouge */
   box-shadow: #ff000000; /* Rouge */
+}
+#placement {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 </style>
