@@ -1,3 +1,10 @@
+<template>
+  <div id="placement" @click="fetchPasswords">
+    <img src="./../assets/img/fichierOuvert.png" alt="fichierOuvert" class="image">
+    <p>{{ dossier.NOMDOSSIER }}</p>
+  </div>
+</template>
+
 <script>
 export default {
   props: {
@@ -6,29 +13,23 @@ export default {
       required: true
     }
   },
-  mounted() {
-    
+  methods: {
+    fetchPasswords() {
+      console.log('lID est ' + this.dossier.IDDOSSIER)
+      this.$emit('fetch-passwords', this.dossier.IDDOSSIER);
+    }
   }
 };
 </script>
 
-<template>
-  <div id="placement">
-    <img src="./../assets/img/fichierOuvert.png" alt="fichierOuvert" class = "image">
-    <p>{{ dossier.NOMDOSSIER }}</p>
-  </div>
- 
-</template>
-  
 <style scoped>
 .image {
   height: 50px;
-  cursor: pointer;
 }
 
-#placement{
+#placement {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 </style>
-  

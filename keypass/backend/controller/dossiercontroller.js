@@ -32,7 +32,7 @@ function getdossier(req, res) {
 
 // Fonction pour obtenir une application par ID utilisateur
 function getdossierid(req, res) {
-    var query = 'SELECT NOMDOSSIER FROM `DOSSIER`  ap  JOIN `DETIENT` dt ON ap.IDDOSSIER = dt.IDDOSSIER JOIN `UTILISATEUR`  ut ON ut.IDUTILISTEUR = dt.IDUTILISTEUR WHERE ut.IDUTILISTEUR = ?';
+    var query = 'SELECT ap.IDDOSSIER ,NOMDOSSIER FROM `DOSSIER`  ap  JOIN `DETIENT` dt ON ap.IDDOSSIER = dt.IDDOSSIER JOIN `UTILISATEUR`  ut ON ut.IDUTILISTEUR = dt.IDUTILISTEUR WHERE ut.IDUTILISTEUR = ?';
     var userId = req.params.id; 
 
     pool.query(query,[userId], function (error, results, fields) {

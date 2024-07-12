@@ -1,13 +1,12 @@
 <template>
   <div id="Global">
-    <div id="gauche"> 
+    <div id="gauche">
       <img src="./../assets/img/iconeNewFichier.webp" alt="iconeNewFichier" class="image" @click="toggleHiddenButtons">
-
       <div v-for="dossier in state.dossier" :key="dossier.IDDOSSIER">
-        <Fichier :dossier="dossier"/>
+        <Fichier :dossier="dossier" @fetch-passwords="fetchPasswords"/>
       </div>
       <div v-if="state.dossier.length === 0">
-          <p>Vous avez pas dossier</p>
+        <p>Vous avez pas dossier</p>
       </div>
     </div>
     <div id="droite">
@@ -23,7 +22,7 @@
         </thead>
         <tbody>
           <tr v-for="pass in state.app" :key="pass.IDAPP">
-            <App :app="pass" />
+            <App :app="pass"/>
           </tr>
           <tr v-if="state.app.length === 0">
             <td colspan="4">Aucune application trouvée.</td>
@@ -99,11 +98,20 @@ export default {
       }
     };
 
+    const fetchPasswords = (dossierId) => {
+      axios.get(`http://ricardonunesemilio.fr:8005/getappiddossier/${dossierId}`)
+        .then(response => {
+          state.app = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    };
+
     const updateApp = () => {
-     
       const newDossier = {
         NOMDOSSIER: nomNewDossier.value,
-        IDPARENT: 1, 
+        IDPARENT: 1,
         IDUTILISATEUR: yuserId.value,
       };
       console.log(newDossier)
@@ -128,6 +136,7 @@ export default {
       nomNewDossier,
       userApp,
       updateApp,
+      fetchPasswords,
     };
   },
 };

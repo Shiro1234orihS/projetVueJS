@@ -77,6 +77,22 @@ function getappid(req, res) {
         }
     });
 }
+// Fonction pour obtenir une application par ID utilisateur
+function getappiddossier(req, res) {
+    var userId = req.params.id; // Supposant que l'ID utilisateur est passé en paramètre de la requête
+    var query = 'SELECT * FROM `APP` WHERE `IDDOSSIER` = ?';
+
+    pool.query(query, [userId], function (error, results, fields) {
+        if (error) {
+            console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+            res.status(500).json({ error: "Une erreur interne est survenue" });
+        } else if (results.length === 0) {
+            res.status(404).json({ message: "Aucune application trouvée pour cet utilisateur" });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+}
 
 // Fonction de suppression d'application
 function delectepass(req, res) {
@@ -123,4 +139,4 @@ function updateApp(req, res) {
 }
 
 // Exporte les fonctions pour qu'elles puissent être utilisées dans d'autres fichiers du projet
-module.exports = { addapp, getapp, getappid, delectepass, updateApp };
+module.exports = { addapp, getapp, getappid, delectepass, updateApp,getappiddossier };
