@@ -3,6 +3,7 @@ import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import { useAppStore } from './stores/app';
 import { useRouter } from 'vue-router'
+import { useDossierStore } from '@/stores/dossier';
 
 const route = useRoute();
 const hiddenButtonsVisible = ref(false);
@@ -12,7 +13,7 @@ const includeUppercase = ref(false);
 const includeNumbers = ref(false);
 const app = useAppStore();
 const router = useRouter();
-
+const dossierStore = useDossierStore();
 
 const linkApp = ref("");
 const userApp = ref("");
@@ -137,8 +138,11 @@ function newApp  ()  {
                 <span>Commentaire</span>
             </label>
             <label>
-                <input type="text" class="input" v-model="dossierApp" placeholder="" required="">
-                <span>Nom de dossier</span>
+              <span>Nom de dossier</span>
+              <select> 
+                <option>Aucun Fichier</option>
+                <option  v-for="dossier in dossierStore.dossiers" :key="dossier.IDDOSSIER">{{dossier.NOMDOSSIER }}</option>
+              </select> 
             </label>
             <button @click="newApp">Nouveau mot de passe</button>
         </div>

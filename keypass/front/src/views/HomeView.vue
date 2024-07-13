@@ -93,6 +93,8 @@ export default {
         axios.get(`http://ricardonunesemilio.fr:8005/getdossierid/${yuserId.value}`)
           .then(response => {
             state.dossier = response.data;
+            dossierStore.dossiers = response.data;
+            console.log(dossierStore.dossiers);
           })
           .catch(error => {
             console.error(error);
