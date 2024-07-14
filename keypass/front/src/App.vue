@@ -123,6 +123,10 @@ const newApp = () => {
         </div>
         <button @click="setPassword">Générer un mot de passe</button>
         <label>
+          <input type="text" class="input" v-model="commentApp" placeholder="" required="">
+          <span>Commentaire</span>
+        </label>
+        <label>
           <span>Nom de dossier</span>
           <select v-model="selectedDossier">
             <option :value="null">Aucun Fichier</option>

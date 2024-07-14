@@ -9,9 +9,6 @@
       <div v-for="dossier in state.dossier" :key="dossier.IDDOSSIER">
         <Fichier :dossier="dossier" @fetch-passwords="fetchPasswords"/>
       </div>
-      <div v-if="state.dossier.length === 0">
-        <p>Vous avez pas dossier</p>
-      </div>
     </div>
     <div id="droite">
       <table>
