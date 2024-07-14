@@ -19,25 +19,18 @@ const linkApp = ref("");
 const userApp = ref("");
 const passApp = ref("");
 const commentApp = ref("");
-const dossierApp = ref("");
-
-
-
+const selectedDossier = ref(null);
 
 const isConnexionView = computed(() => {
-  if(route.name == 'connexion' ||route.name == 'accountcreation')
-    return false ;
-  else 
-    return true
+  return !(route.name === 'connexion' || route.name === 'accountcreation');
 });
 
 const toggleHiddenButtons = () => {
   hiddenButtonsVisible.value = !hiddenButtonsVisible.value;
 };
 
-// Function to generate a random password
 const generatePassword = () => {
-  const length = nombredelettre.value; // Use the reactive variable for length
+  const length = nombredelettre.value;
   let charset = "abcdefghijklmnopqrstuvwxyz";
   
   if (includeUppercase.value) {
@@ -51,106 +44,98 @@ const generatePassword = () => {
   }
 
   let password = "";
-  for (let i = 0, n = charset.length; i < length; ++i) {
-    password += charset.charAt(Math.floor(Math.random() * n));
+  for (let i = 0; i < length; ++i) {
+    password += charset.charAt(Math.floor(Math.random() * charset.length));
   }
   return password;
 };
 
-// Function to set the generated password to the input field
 const setPassword = () => {
   const passwordInput = document.getElementById("input-pass");
-  passwordInput.value = generatePassword();
-  passApp.value = passwordInput.value;
+  const generatedPassword = generatePassword();
+  passwordInput.value = generatedPassword;
+  passApp.value = generatedPassword;
 };
 
-function newApp  ()  {
-  const yuserId = ref(null)
-  yuserId.value = localStorage.getItem('userId');
-  console.log( yuserId.value,linkApp.value,commentApp.value,dossierApp.value,passApp.value);
+const newApp = () => {
+  const userId = localStorage.getItem('userId');
+  const dossierId = selectedDossier.value ? selectedDossier.value.IDDOSSIER : null;
+  console.log(userId, dossierId, linkApp.value, commentApp.value, userApp.value, passApp.value);
+  
   app.postapp({
-    IDUTILISTEUR : localStorage.getItem('userId'),
+    IDUTILISTEUR: userId,
+    IDDOSSIER: dossierId,
     NOMAPP: linkApp.value,
-    UTILISATEURAPP : userApp.value,
-    COMMENTAIRE : commentApp.value,
-    Dossier : dossierApp.value,
-    MOTPASSAPP : passApp.value
-  })
-  router.push({ name: 'loader' }); 
+    UTILISATEURAPP: userApp.value,
+    COMMENTAIRE: commentApp.value,
+    MOTPASSAPP: passApp.value
+  });
+  
+  router.push({ name: 'loader' });
   hiddenButtonsVisible.value = !hiddenButtonsVisible.value;
-}
+};
 </script>
 
+
 <template>
- <div>
-        <header v-if="isConnexionView">
-            <nav>
-                <button @click="toggleHiddenButtons">Ajouter un mot de passe</button>
-                <div class="recherche">
-                    <input type="text">
-                    <button>Recherche</button>
-                </div>
-                <button class="profile-button">Profil</button>
-            </nav>
-        </header>
-        <div v-show="hiddenButtonsVisible" id="hidden-pass">
-            <button @click="toggleHiddenButtons" id="exit">❌</button>
-
-            <label>
-                <input v-model="linkApp" class="input" type="text" placeholder="" required="">
-                <span>Lien</span>
-            </label>
-
-            <label>
-                <input v-model="userApp" class="input" type="text" placeholder="" required="">
-                <span>Nom d'utilisateur</span>
-            </label>
-
-            <label>
-                <input type="password" class="input" v-model="passApp" id="input-pass" placeholder="" required="">
-                <span>Mot de passe</span>
-            </label>
-
-            <div class="input">
-                <div>
-                    <input type="checkbox" class="check" v-model="includeSpecialChars">
-                    <p>Caractères spéciaux</p>
-                </div>
-
-                <div>
-                    <input type="checkbox" class="check" v-model="includeUppercase">
-                    <p>Majuscule</p>
-                </div>
-
-                <div>
-                    <input type="checkbox" class="check" v-model="includeNumbers">
-                    <p>Nombre</p>
-                </div>
-
-                <div>
-                    <input id="nb" type="number" v-model="nombredelettre">
-                    <p>Nombre de caractères</p>
-                </div>
+  <div>
+    <header v-if="isConnexionView">
+        <nav>
+            <button @click="toggleHiddenButtons">Ajouter un mot de passe</button>
+            <div class="recherche">
+                <input type="text">
+                <button>Recherche</button>
             </div>
-            <button @click="setPassword">Générer un mot de passe</button>
-            <label>
-                <input type="text" class="input" v-model="commentApp" placeholder="" required="">
-                <span>Commentaire</span>
-            </label>
-            <label>
-              <span>Nom de dossier</span>
-              <select> 
-                <option>Aucun Fichier</option>
-                <option  v-for="dossier in dossierStore.dossiers" :key="dossier.IDDOSSIER">{{dossier.NOMDOSSIER }}</option>
-              </select> 
-            </label>
-            <button @click="newApp">Nouveau mot de passe</button>
+            <button class="profile-button">Profil</button>
+        </nav>
+    </header>
+    <div v-show="hiddenButtonsVisible" id="hidden-pass">
+        <button @click="toggleHiddenButtons" id="exit">❌</button>
+         <label>
+            <input v-model="linkApp" class="input" type="text" placeholder="" required="">
+            <span>Lien</span>
+        </label>
+         <label>
+            <input v-model="userApp" class="input" type="text" placeholder="" required="">
+            <span>Nom d'utilisateur</span>
+        </label>
+         <label>
+            <input type="password" class="input" v-model="passApp" id="input-pass" placeholder="" required="">
+            <span>Mot de passe</span>
+        </label>
+         <div class="input">
+            <div>
+                <input type="checkbox" class="check" v-model="includeSpecialChars">
+                <p>Caractères spéciaux</p>
+            </div>
+             <div>
+                <input type="checkbox" class="check" v-model="includeUppercase">
+                <p>Majuscule</p>
+            </div>
+             <div>
+                <input type="checkbox" class="check" v-model="includeNumbers">
+                <p>Nombre</p>
+            </div>
+             <div>
+                <input id="nb" type="number" v-model="nombredelettre">
+                <p>Nombre de caractères</p>
+            </div>
         </div>
-        <RouterView/>
+        <button @click="setPassword">Générer un mot de passe</button>
+        <label>
+          <span>Nom de dossier</span>
+          <select v-model="selectedDossier">
+            <option :value="null">Aucun Fichier</option>
+            <option v-for="dossier in dossierStore.dossiers" :key="dossier.IDDOSSIER" :value="dossier">{{ dossier.NOMDOSSIER }}</option>
+          </select>
+        </label>
+        <button @click="newApp">Nouveau mot de passe</button>
     </div>
-    <div v-show="hiddenButtonsVisible" class="overlay"></div>
-
+    <RouterView/>
+  </div>
+  <div v-show="hiddenButtonsVisible" class="overlay"></div>
 </template>
+ 
 
 <style scoped>
 /* Global Styles */
