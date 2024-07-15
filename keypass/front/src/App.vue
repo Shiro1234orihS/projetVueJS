@@ -15,10 +15,6 @@ const isConnexionView = computed(() => {
   <div>
     <header v-if="isConnexionView">
         <nav>
-            <div class="recherche">
-                <input type="text">
-                <button>Recherche</button>
-            </div>
             <button class="profile-button">Profil</button>
         </nav>
     </header>

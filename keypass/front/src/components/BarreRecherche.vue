@@ -1,7 +1,6 @@
 <script setup>
-import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useDossierStore } from '@/stores/dossier';
 import { useAppStore } from '@/stores/app';
 
@@ -20,6 +19,8 @@ const userApp = ref("");
 const passApp = ref("");
 const commentApp = ref("");
 const selectedDossier = ref(null);
+
+const barreDeRecherche = ref("");
 
 const isConnexionView = computed(() => {
   return !(route.name === 'connexion' || route.name === 'accountcreation');
@@ -74,59 +75,63 @@ const newApp = () => {
   router.push({ name: 'loader' });
   hiddenButtonsVisible.value = !hiddenButtonsVisible.value;
 };
+
+const recherche = () => {
+  this.$emit('search', barreDeRecherche.value);
+};
 </script>
 
 <template>
-    <div id="barreRecherche"> 
-        <button @click="toggleHiddenButtons">Ajouter un mot de passe</button>
-        
-        <input type="text">
-        <button>Recherche</button> 
+    <div id="barreRechercheContainer">
+        <input v-model="barreDeRecherche" type="text" placeholder="Rechercher votre mots de passe">
+        <img class="image" src="./../assets/img/recherche.webp" alt="" @click="recherche">
+        <button @click="toggleHiddenButtons">Ajouter un mot de passe</button>   
     </div>
 
     <div v-show="hiddenButtonsVisible" id="hidden-pass">
+        <!-- Formulaire pour ajouter un mot de passe -->
         <button @click="toggleHiddenButtons" id="exit">❌</button>
-         <label>
+        <label>
             <input v-model="linkApp" class="input" type="text" placeholder="" required="">
             <span>Lien</span>
         </label>
-         <label>
+        <label>
             <input v-model="userApp" class="input" type="text" placeholder="" required="">
             <span>Nom d'utilisateur</span>
         </label>
-         <label>
+        <label>
             <input type="password" class="input" v-model="passApp" id="input-pass" placeholder="" required="">
             <span>Mot de passe</span>
         </label>
-         <div class="input">
+        <div class="input">
             <div>
                 <input type="checkbox" class="check" v-model="includeSpecialChars">
                 <p>Caractères spéciaux</p>
             </div>
-             <div>
+            <div>
                 <input type="checkbox" class="check" v-model="includeUppercase">
                 <p>Majuscule</p>
             </div>
-             <div>
+            <div>
                 <input type="checkbox" class="check" v-model="includeNumbers">
                 <p>Nombre</p>
             </div>
-             <div>
+            <div>
                 <input id="nb" type="number" v-model="nombredelettre">
                 <p>Nombre de caractères</p>
             </div>
         </div>
         <button @click="setPassword">Générer un mot de passe</button>
         <label>
-          <input type="text" class="input" v-model="commentApp" placeholder="" required="">
-          <span>Commentaire</span>
+            <input type="text" class="input" v-model="commentApp" placeholder="" required="">
+            <span>Commentaire</span>
         </label>
         <label>
-          <span>Nom de dossier</span>
-          <select v-model="selectedDossier">
-            <option :value="null">Aucun Fichier</option>
-            <option v-for="dossier in dossierStore.dossiers" :key="dossier.IDDOSSIER" :value="dossier">{{ dossier.NOMDOSSIER }}</option>
-          </select>
+            <span>Nom de dossier</span>
+            <select v-model="selectedDossier">
+                <option :value="null">Aucun Fichier</option>
+                <option v-for="dossier in dossierStore.dossiers" :key="dossier.IDDOSSIER" :value="dossier">{{ dossier.NOMDOSSIER }}</option>
+            </select>
         </label>
         <button @click="newApp">Nouveau mot de passe</button>
     </div>
@@ -135,10 +140,19 @@ const newApp = () => {
 </template>
   
 <style scoped>
-
-#barreRecherche{
-    padding: 10;
+#barreRechercheContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
     background-color: aqua;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+#barreRechercheContainer input[type="text"] {
+    flex-grow: 1;
+    margin: 0 10px;
 }
 
 .menu {
@@ -148,7 +162,6 @@ const newApp = () => {
   justify-content: center;
   align-items: center;
 }
-
 
 /* Hidden Password Section Styles */
 #hidden-pass {
@@ -313,5 +326,14 @@ label .input:valid + span {
   color: #ff0000; /* Rouge */
   box-shadow: #ff000000; /* Rouge */
 }
+
+.image {
+  height: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.image:hover {
+  background-color: #004d66;
+}
 </style>
-  

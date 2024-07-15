@@ -11,7 +11,7 @@
       </div>
     </div>
     <div id="droite">
-      <BarreRecherche/>
+      <BarreRecherche @search="filterPasswords"/>
       <table>
         <thead>
           <tr>
@@ -23,10 +23,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="pass in state.app" :key="pass.IDAPP">
+          <tr v-for="pass in filteredPasswords" :key="pass.IDAPP">
             <App :app="pass"/>
           </tr>
-          <tr v-if="state.app.length === 0">
+          <tr v-if="filteredPasswords.length === 0">
             <td colspan="4">Aucune application trouvée.</td>
           </tr>
         </tbody>
@@ -36,12 +36,10 @@
 
   <div v-show="hiddenButtonsVisible" id="hidden-pass">
     <button @click="toggleHiddenButtons" id="exit">❌</button>
-
     <label>
       <input v-model="nomNewDossier" class="input" type="text" placeholder="" required="">
       <span>Nom du dossier</span>
     </label>
-
     <label>
       <input v-model="userApp" class="input" type="text" placeholder="" required="">
       <span>Dossier parent</span>
@@ -52,7 +50,7 @@
 </template>
 
 <script>
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, computed } from 'vue';
 import axios from 'axios';
 import App from '@/components/App.vue';
 import Fichier from '@/components/Fichier.vue';
@@ -73,6 +71,7 @@ export default {
       app: [],
       dossier: [],
     });
+    const searchTerm = ref("");
     const router = useRouter();
     const hiddenButtonsVisible = ref(false);
     const dossierStore = useDossierStore();
@@ -128,12 +127,28 @@ export default {
         IDPARENT: 1,
         IDUTILISATEUR: yuserId.value,
       };
-      console.log(newDossier)
+      console.log(newDossier);
       dossierStore.addNewDossier(newDossier).then(() => {
         fetchData(); // Actualiser les données après l'ajout
       });
       hiddenButtonsVisible.value = false; // Masquer le formulaire après l'ajout
     };
+
+    const filterPasswords = (term) => {
+      searchTerm.value = term;
+    };
+
+    const filteredPasswords = computed(() => {
+      if (!searchTerm.value) {
+        return state.app;
+      }
+      return state.app.filter(pass =>
+        pass.NOMAPP.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+        pass.UTILISATEURAPP.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+        pass.MOTPASSAPP.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+        pass.COMMENTAIRE.toLowerCase().includes(searchTerm.value.toLowerCase())
+      );
+    });
 
     onMounted(() => {
       fetchData();
@@ -145,6 +160,7 @@ export default {
 
     return {
       state,
+      searchTerm,
       toggleHiddenButtons,
       hiddenButtonsVisible,
       nomNewDossier,
@@ -152,11 +168,12 @@ export default {
       updateApp,
       fetchPasswords,
       fetchData,
+      filterPasswords,
+      filteredPasswords,
     };
   },
 };
 </script>
-
 
 
 <style scoped>
