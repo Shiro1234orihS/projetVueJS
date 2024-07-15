@@ -11,6 +11,7 @@
       </div>
     </div>
     <div id="droite">
+      <BarreRecherche/>
       <table>
         <thead>
           <tr>
@@ -55,6 +56,7 @@ import { ref, onMounted, reactive } from 'vue';
 import axios from 'axios';
 import App from '@/components/App.vue';
 import Fichier from '@/components/Fichier.vue';
+import BarreRecherche from '@/components/BarreRecherche.vue';
 import { useRouter } from 'vue-router';
 import { useDossierStore } from '@/stores/dossier';
 
@@ -63,6 +65,7 @@ export default {
   components: {
     App,
     Fichier,
+    BarreRecherche,
   },
   setup() {
     const yuserId = ref(null);
