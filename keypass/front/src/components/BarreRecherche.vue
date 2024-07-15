@@ -145,29 +145,51 @@ const recherche = () => {
     align-items: center;
     justify-content: space-between;
     padding: 5px;
-    background-color: aqua;
+    background-color: #3498DB; /* Bleu Clair */
     border-radius: 10px;
+    border: 1px solid black;
     margin: 5px;
 }
 
 #barreRechercheContainer input[type="text"] {
     flex-grow: 1;
     margin: 0 10px;
+    padding: 5px;
+    border: 1px solid #2C3E50; /* Bleu Foncé */
+    border-radius: 5px;
+    background-color: #ECF0F1; /* Gris Clair */
+    color: #2C3E50; /* Bleu Foncé */
 }
 
-.menu {
-  display: flex;
-  gap: 20px;
-  flex-grow: 1;
-  justify-content: center;
-  align-items: center;
+#barreRechercheContainer button {
+    background-color: #2ECC71; /* Vert */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#barreRechercheContainer button:hover {
+    background-color: #27ae60;
+}
+
+.image {
+    height: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.image:hover {
+    background-color: #2C3E50; /* Bleu Foncé */
 }
 
 /* Hidden Password Section Styles */
 #hidden-pass {
   position: fixed;
   text-align: center;
-  top: 0%;
+  top: 10%;
   left: 25%;
   width: 50%;
   background-color: rgba(52, 152, 219, 0.84); /* Bleu Clair */
@@ -189,7 +211,7 @@ const recherche = () => {
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin: 2x;
+  margin: 2px;
 }
 
 .input div {
@@ -295,7 +317,7 @@ label .input:placeholder-shown + span {
 
 label .input:focus + span,
 label .input:valid + span {
-  color: #00bfff;
+  color: #3498DB; /* Bleu Clair */
   top: 5px;
   font-size: 0.7em;
   font-weight: 600;
@@ -323,17 +345,6 @@ label .input:valid + span {
   cursor: pointer;
   padding: 0;
   font-size: 24px; /* Ajustez la taille de la croix */
-  color: #ff0000; /* Rouge */
-  box-shadow: #ff000000; /* Rouge */
-}
-
-.image {
-  height: 50px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.image:hover {
-  background-color: #004d66;
+  color: #E74C3C; /* Rouge */
 }
 </style>

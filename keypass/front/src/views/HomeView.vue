@@ -207,6 +207,7 @@ th {
   color: white;
   padding: 1px;
   margin-top: 1px;
+  border-radius: 10px;
 }
 
 #Global #droite {
