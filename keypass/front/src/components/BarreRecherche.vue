@@ -149,14 +149,6 @@ const newApp = () => {
   align-items: center;
 }
 
-/* Profile Button Styles */
-.profile-button {
-  width: 60px;
-  height: 60px;
-  margin-right: 20px;
-  border-radius: 100%;
-  border: 2px solid #E74C3C; /* Rouge */
-}
 
 /* Hidden Password Section Styles */
 #hidden-pass {
