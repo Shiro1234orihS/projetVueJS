@@ -79,6 +79,13 @@
       <input type="text" class="input" v-model="commentApp" placeholder="" required="">
       <span>Commentaire</span>
     </label>
+    <label>
+      <span>Nom de dossier</span>
+      <select v-model="selectedDossier">
+        <option :value="null">Aucun Fichier</option>
+        <option v-for="dossier in dossierStore.dossiers" :key="dossier.IDDOSSIER" :value="dossier">{{ dossier.NOMDOSSIER }}</option>
+      </select>
+    </label>
     <button @click="updateApp">Modifier le mot de passe</button>
   </div>
   <div v-show="hiddenButtonsVisible2" class="overlay"></div>
@@ -89,6 +96,7 @@
 import { ref } from 'vue';
 import { useAppStore } from './../stores/app';
 import { useRouter } from 'vue-router';
+import { useDossierStore } from '@/stores/dossier';
 
 export default {
   props: {
@@ -102,6 +110,7 @@ export default {
     const hiddenButtonsVisible2 = ref(false);
     const appStore = useAppStore();
     const router = useRouter();
+    const selectedDossier = ref(null);
 
     const linkApp = ref("");
     const userApp = ref("");
@@ -111,6 +120,7 @@ export default {
     const includeSpecialChars = ref(false);
     const includeUppercase = ref(false);
     const includeNumbers = ref(false);
+    const dossierStore = useDossierStore();
 
     const suppIcone = () => {
       hiddenButtonsVisible.value = !hiddenButtonsVisible.value;
@@ -167,8 +177,10 @@ export default {
     };
 
     const updateApp = () => {
+      const dossierId = selectedDossier.value ? selectedDossier.value.IDDOSSIER : null;
       const payload = {
         IDAPP: props.app.IDAPP,
+        IDDOSSIER: dossierId,
         NOMAPP: linkApp.value,
         UTILISATEURAPP: userApp.value,
         COMMENTAIRE: commentApp.value,
@@ -200,7 +212,9 @@ export default {
       deleteApp,
       updateApp,
       annulerDelete,
-      annulerUpdate
+      annulerUpdate,
+      selectedDossier,
+      dossierStore
     };
   },
   methods: {

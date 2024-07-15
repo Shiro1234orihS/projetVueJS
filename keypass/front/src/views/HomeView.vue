@@ -104,10 +104,18 @@ export default {
     const fetchPasswords = (dossierId) => {
       axios.get(`http://ricardonunesemilio.fr:8005/getappiddossier/${dossierId}`)
         .then(response => {
-          state.app = response.data;
+          if (response.data.length === 0) {
+            state.app = [];  // Initialise à un tableau vide si la réponse est vide
+          } else {
+            state.app = response.data;
+          }
         })
         .catch(error => {
-          console.error(error);
+          if (error.response && error.response.status === 404) {
+            state.app = [];  // Initialise à un tableau vide en cas d'erreur 404
+          } else {
+            console.error(error);
+          }
         });
     };
 
