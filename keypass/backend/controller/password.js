@@ -1,5 +1,6 @@
 // Charge le module MySQL pour Node.js
 var mysql = require('mysql');
+const methodecrypto = require('./cryptage');
 
 // Définit les options de connexion à la base de données MySQL
 var connectionOptions = {
@@ -12,14 +13,24 @@ var connectionOptions = {
 
 // Création d'un pool de connexions MySQL pour une meilleure gestion des ressources.
 const pool = mysql.createPool(connectionOptions);
+var querytoken = 'SELECT TOKEN from UTILISATEUR where IDUTILISTEUR = ?'
 
 // Fonction d'ajout d'application
 function addapp(req, res) {
-    console.log(req.body);
+  
     var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`,`IDDOSSIER`,`NOMAPP`, `UTILISATEURAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?,?, ?, ?, ?, ?)';
+    var token;
+    var motsdepasseCrypte ;
+
+    pool.query(querytoken, [req.body.IDUTILISTEUR],function (error, results, fields) {
+        token = results.dody[0]
+    });
+    
+    motsdepasseCrypte = methodecrypto.decrypt(req.body.MOTPASSAPP , token)
     
 
-    pool.query(queryStr, [req.body.IDUTILISTEUR,req.body.IDDOSSIER, req.body.NOMAPP, req.body.UTILISATEURAPP, req.body.COMMENTAIRE, req.body.MOTPASSAPP], function (error, results, fields) {
+
+    pool.query(queryStr, [req.body.IDUTILISTEUR,req.body.IDDOSSIER, req.body.NOMAPP, req.body.UTILISATEURAPP, req.body.COMMENTAIRE,motsdepasseCrypte], function (error, results, fields) {
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
