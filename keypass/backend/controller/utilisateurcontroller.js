@@ -22,7 +22,7 @@ async function login(req, res) {
    console.log(name, password);
    
    // Requête pour obtenir le mot de passe haché de l'utilisateur
-   const queryStr = 'SELECT IDUTILISATEUR ,NOMUTILISATEUR , TOKEN  FROM `UTILISATEUR` WHERE `NOMUTILISATEUR` = ?';
+   const queryStr = 'SELECT *  FROM `UTILISATEUR` WHERE `NOMUTILISATEUR` = ?';
 
    connection.connect();
 

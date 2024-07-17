@@ -19,17 +19,11 @@ var querytoken = 'SELECT TOKEN from UTILISATEUR where IDUTILISTEUR = ?'
 function addapp(req, res) {
   
     var queryStr = 'INSERT INTO `APP` (`IDUTILISTEUR`,`IDDOSSIER`,`NOMAPP`, `UTILISATEURAPP`, `COMMENTAIRE`, `MOTPASSAPP`) VALUES (?,?, ?, ?, ?, ?)';
-    var token;
-    var motsdepasseCrypte ;
-
-    pool.query(querytoken, [req.body.IDUTILISTEUR],function (error, results, fields) {
-        token = results.dody[0]
-    });
+    var token = req.body.TOKEN;
+    var motsdepasseCrypte ; 
+  
+    motsdepasseCrypte = methodecrypto.encrypt(req.body.MOTPASSAPP , token)
     
-    motsdepasseCrypte = methodecrypto.decrypt(req.body.MOTPASSAPP , token)
-    
-
-
     pool.query(queryStr, [req.body.IDUTILISTEUR,req.body.IDDOSSIER, req.body.NOMAPP, req.body.UTILISATEURAPP, req.body.COMMENTAIRE,motsdepasseCrypte], function (error, results, fields) {
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);
@@ -52,6 +46,9 @@ function getapp(req, res) {
         } else if (results.length === 0) {
             res.status(404).json({ message: "Aucune application trouvée" });
         } else {
+            results.forEach(result => {
+                result.MOTPASSAPP = decrypt(result.MOTPASSAPP );
+            });
             res.status(200).json(results);
         }
     });
@@ -61,32 +58,91 @@ function getapp(req, res) {
 function getappid(req, res) {
     var userId = req.params.id; // Supposant que l'ID utilisateur est passé en paramètre de la requête
     var query = 'SELECT * FROM `APP` WHERE `IDUTILISTEUR` = ?';
+    var querytoken = 'SELECT * FROM `UTILISATEUR` WHERE `IDUTILISTEUR` = ?';
 
-    pool.query(query, [userId], function (error, results, fields) {
+    pool.query(querytoken, [userId], function (error, results, fields) {
         if (error) {
             console.error('Une erreur est survenue lors de la requête à la base de données:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
-        } else if (results.length === 0) {
-            res.status(404).json({ message: "Aucune application trouvée pour cet utilisateur" });
-        } else {
-            res.status(200).json(results);
+            return;
         }
+
+        if (results.length === 0) {
+            res.status(404).json({ message: "Utilisateur non trouvé" });
+            return;
+        }
+
+        var token = results[0].TOKEN; // Assure-toi que le champ TOKEN existe et est correctement orthographié
+
+        pool.query(query, [userId], function (error, appResults, fields) {
+            if (error) {
+                console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+                res.status(500).json({ error: "Une erreur interne est survenue" });
+            } else if (appResults.length === 0) {
+                res.status(404).json({ message: "Aucune application trouvée pour cet utilisateur" });
+            } else {
+                appResults.forEach(result => {
+                    try {
+                        result.MOTPASSAPP = methodecrypto.decrypt(result.MOTPASSAPP, token);
+                    } catch (decryptionError) {
+                        console.error('Une erreur est survenue lors du déchiffrement du mot de passe:', decryptionError);
+                        res.status(500).json({ error: "Une erreur interne est survenue lors du déchiffrement du mot de passe" });
+                        return;
+                    }
+                });
+
+                res.status(200).json(appResults);
+            }
+        });
     });
 }
+
 // Fonction pour obtenir une application par ID utilisateur
 function getappiddossier(req, res) {
-    var userId = req.params.id; // Supposant que l'ID utilisateur est passé en paramètre de la requête
-    var query = 'SELECT * FROM `APP` WHERE `IDDOSSIER` = ?';
+    var IDDOSSIER = req.params.id; // Supposant que l'ID du dossier est passé en paramètre de la requête
+    var IDUTILISATEUR = req.params.id2; // Supposant que l'ID utilisateur est passé en tant que paramètre de la requête
 
-    pool.query(query, [userId], function (error, results, fields) {
+    console.log(IDUTILISATEUR); // Devrait afficher l'ID utilisateur correctement
+
+    var queryApp = 'SELECT * FROM `APP` WHERE `IDDOSSIER` = ?';
+    var queryToken = 'SELECT * FROM `UTILISATEUR` WHERE `IDUTILISTEUR` = ?';
+
+    pool.query(queryToken, [IDUTILISATEUR], function (error, tokenResults, fields) {
         if (error) {
-            console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+            console.error('Une erreur est survenue lors de la requête à la base de données pour récupérer le token:', error);
             res.status(500).json({ error: "Une erreur interne est survenue" });
-        } else if (results.length === 0) {
-            res.status(404).json({ message: "Aucune application trouvée pour cet utilisateur" });
-        } else {
-            res.status(200).json(results);
+            return;
         }
+
+        if (tokenResults.length === 0) {
+            res.status(404).json({ message: "Utilisateur non trouvé" });
+            return;
+        }
+
+        var token = tokenResults[0].TOKEN; // Assurez-vous que le champ TOKEN existe et est correctement orthographié
+
+        pool.query(queryApp, [IDDOSSIER], function (error, appResults, fields) {
+            if (error) {
+                console.error('Une erreur est survenue lors de la requête à la base de données pour récupérer les applications:', error);
+                res.status(500).json({ error: "Une erreur interne est survenue" });
+                return;
+            }
+
+            if (appResults.length === 0) {
+                res.status(404).json({ message: "Aucune application trouvée pour ce dossier" });
+                return;
+            }
+
+            try {
+                appResults.forEach(result => {
+                    result.MOTPASSAPP = methodecrypto.decrypt(result.MOTPASSAPP, token);
+                });
+                res.status(200).json(appResults);
+            } catch (decryptionError) {
+                console.error('Une erreur est survenue lors du déchiffrement du mot de passe:', decryptionError);
+                res.status(500).json({ error: "Une erreur interne est survenue lors du déchiffrement du mot de passe" });
+            }
+        });
     });
 }
 

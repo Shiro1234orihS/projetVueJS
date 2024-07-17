@@ -60,8 +60,9 @@ const setPassword = () => {
 
 const newApp = () => {
   const userId = localStorage.getItem('userId');
+  const token = localStorage.getItem('token');
   const dossierId = selectedDossier.value ? selectedDossier.value.IDDOSSIER : null;
-  console.log(userId, dossierId, linkApp.value, commentApp.value, userApp.value, passApp.value);
+  console.log(userId, dossierId, linkApp.value, commentApp.value, userApp.value, passApp.value , token);
   
   app.postapp({
     IDUTILISTEUR: userId,
@@ -69,7 +70,8 @@ const newApp = () => {
     NOMAPP: linkApp.value,
     UTILISATEURAPP: userApp.value,
     COMMENTAIRE: commentApp.value,
-    MOTPASSAPP: passApp.value
+    MOTPASSAPP: passApp.value, 
+    TOKEN : token,
   });
   
   router.push({ name: 'loader' });

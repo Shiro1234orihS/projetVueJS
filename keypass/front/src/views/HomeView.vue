@@ -104,22 +104,23 @@ export default {
     };
 
     const fetchPasswords = (dossierId) => {
-      axios.get(`http://ricardonunesemilio.fr:8005/getappiddossier/${dossierId}`)
-        .then(response => {
-          if (response.data.length === 0) {
-            state.app = [];  // Initialise à un tableau vide si la réponse est vide
-          } else {
-            state.app = response.data;
-          }
-        })
-        .catch(error => {
-          if (error.response && error.response.status === 404) {
-            state.app = [];  // Initialise à un tableau vide en cas d'erreur 404
-          } else {
-            console.error(error);
-          }
-        });
+      axios.get(`http://ricardonunesemilio.fr:8005/getappiddossier/${dossierId}/${yuserId.value}`, )
+      .then(response => {
+        if (response.data.length === 0) {
+          state.app = [];  // Initialise à un tableau vide si la réponse est vide
+        } else {
+          state.app = response.data;
+        }
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 404) {
+          state.app = [];  // Initialise à un tableau vide en cas d'erreur 404
+        } else {
+          console.error(error);
+        }
+      });
     };
+
 
     const updateApp = () => {
       const newDossier = {
