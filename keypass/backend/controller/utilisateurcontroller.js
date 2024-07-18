@@ -58,32 +58,47 @@ async function login(req, res) {
 // Fonction d'inscription
 async function register(req, res) {
    const connection = mysql.createConnection(connectionOptions);
-
+   
    const token = methodecrypto.generateToken();
    let encryptedPassword;
+   
    try {
-       encryptedPassword = await methodecrypto.cryptageMotsPasseUsers(req.body.MOTPASSUTILISATEUR);
+      encryptedPassword = await methodecrypto.cryptageMotsPasseUsers(req.body.MOTPASSUTILISATEUR);
    } catch (error) {
-       console.error('Erreur lors du cryptage du mot de passe:', error);
-       res.status(500).json({ error: "Une erreur interne est survenue lors du cryptage du mot de passe" });
-       return;
+      console.error('Erreur lors du cryptage du mot de passe:', error);
+      res.status(500).json({ error: "Une erreur interne est survenue lors du cryptage du mot de passe" });
+      return;
    }
-   console.log(encryptedPassword);
+   
+   console.log('Mot de passe crypté:', encryptedPassword);
+   console.log('Token généré:', token);
    
    const queryStr = 'INSERT INTO `UTILISATEUR` (`NOMUTILISATEUR`, `MOTPASSUTILISATEUR`, `TOKEN`) VALUES (?,?,?)';
 
-   connection.connect();
-
-   connection.query(queryStr, [req.body.NOMUTILISATEUR, encryptedPassword, token], function (error, results, fields) {
-       if (error) {
-           console.error('Une erreur est survenue lors de la requête à la base de données:', error);
-           res.status(500).json({ error: "Une erreur interne est survenue" });
+   connection.connect((err) => {
+       if (err) {
+           console.error('Erreur de connexion à la base de données:', err);
+           res.status(500).json({ error: "Erreur de connexion à la base de données" });
            return;
        }
-       res.status(200).json({ message: "UTILISATEUR enregistré avec succès", token: token });
-   });
 
-   connection.end();
+       connection.query(queryStr, [req.body.NOMUTILISATEUR, encryptedPassword, token], function (error, results, fields) {
+           if (error) {
+               console.error('Une erreur est survenue lors de la requête à la base de données:', error);
+               res.status(500).json({ error: "Une erreur interne est survenue" });
+               return;
+           }
+
+           console.log('Résultats de la requête:', results);
+           res.status(200).json({ message: "UTILISATEUR enregistré avec succès", token: token });
+       });
+
+       connection.end((err) => {
+           if (err) {
+               console.error('Erreur lors de la fermeture de la connexion à la base de données:', err);
+           }
+       });
+   });
 }
 
 // Fonction pour récupérer les UTILISATEUR de la base de données

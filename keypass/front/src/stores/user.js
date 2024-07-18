@@ -26,15 +26,15 @@ export const userStore = defineStore('user', () => {
     });   
   }
 
-  function register(auth, onSuccess){
+  function register(auth, onSuccess) {
     axios.post(url + "register", auth).then(response => {
-      if (response.data && response.data.length > 0) {
-          console.log("Connexion réussie", user.value);
-          if (onSuccess) onSuccess();
-      }
-  }).catch(error => {
-      console.error("Erreur de connexion", error);
-  });
+      console.log("Réponse de l'API d'inscription :", response.data);
+      if (response.data && response.data.token) {
+        if (onSuccess) return onSuccess();
+      } 
+    }).catch(error => {
+      console.error("Erreur d'inscription", error);
+    });
   }
 
 
