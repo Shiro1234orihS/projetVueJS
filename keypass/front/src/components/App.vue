@@ -93,7 +93,8 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import Clipboard from 'clipboard';
 import { useAppStore } from './../stores/app';
 import { useRouter } from 'vue-router';
 import { useDossierStore } from '@/stores/dossier';
@@ -193,6 +194,14 @@ export default {
       });
     };
 
+    onMounted(() => {
+      new Clipboard('.image', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+    });
+
     return {
       hiddenButtonsVisible,
       hiddenButtonsVisible2,
@@ -219,12 +228,23 @@ export default {
   },
   methods: {
     copierTexte(id) {
-      const texte = document.querySelector(`#${id} p`).innerText;
-      navigator.clipboard.writeText(texte).then(() => {
+      const texteElement = document.querySelector(`#${id} p`);
+      const texte = texteElement.innerText;
+    
+      const textarea = document.createElement("textarea");
+      textarea.value = texte;
+      document.body.appendChild(textarea);
+      textarea.select();
+      
+      try {
+        document.execCommand("copy");
         alert('Texte copié avec succès!');
-      }).catch(err => {
+      } catch (err) {
         console.error('Erreur lors de la copie du texte : ', err);
-      });
+        alert('Erreur lors de la copie du texte.');
+      }
+    
+      document.body.removeChild(textarea);
     }
   }
 }
