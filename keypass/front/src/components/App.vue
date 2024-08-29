@@ -35,6 +35,7 @@
     <button @click="deleteApp">OUI</button>
     <button @click="annulerDelete">Non</button>
   </div>
+  
   <div v-show="hiddenButtonsVisible2" id="hidden-pass-update">
     <button @click="toggleHiddenButtons" id="exit">❌</button>
 
@@ -93,11 +94,13 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,watchEffect } from 'vue';
 import Clipboard from 'clipboard';
 import { useAppStore } from './../stores/app';
 import { useRouter } from 'vue-router';
 import { useDossierStore } from '@/stores/dossier';
+
+
 
 export default {
   props: {
@@ -122,6 +125,14 @@ export default {
     const includeUppercase = ref(false);
     const includeNumbers = ref(false);
     const dossierStore = useDossierStore();
+
+    watchEffect(() => {
+      linkApp.value = props.app.NOMAPP;
+      userApp.value = props.app.UTILISATEURAPP;
+      passApp.value = props.app.MOTPASSAPP;
+      commentApp.value = props.app.COMMENTAIRE || 'N/A';
+    });
+  
 
     const suppIcone = () => {
       hiddenButtonsVisible.value = !hiddenButtonsVisible.value;
