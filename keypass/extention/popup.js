@@ -50,7 +50,7 @@ document.getElementById('connection').addEventListener('click', () => {
         iduser = data[0].IDUTILISTEUR;
         alert('Login successful');
         changeDisplayOnSuccess(username); // Call function to change display
-        saveCredentials(iduser, username);
+        saveCredentials(iduser, username , data[0].token); 
       } else {
         alert('Login failed');
         erreurDeConnection(); 
@@ -66,11 +66,12 @@ document.getElementById('connection').addEventListener('click', () => {
 //-------------------------------------------//
 //          Save Credentials Function        //
 //-------------------------------------------//
-function saveCredentials(IDUTILISTEUR, USERNAME) {
+function saveCredentials(IDUTILISTEUR, USERNAME, TOKEN) {
   chrome.storage.local.set({
     credentials: {
       iduser: IDUTILISTEUR,
-      username: USERNAME
+      username: USERNAME,
+      token : TOKEN
     }
   }, function () {
     alert("Les informations de connexion ont été enregistrées.");
@@ -129,6 +130,9 @@ function changeDisplayOnSuccess(username) {
   document.querySelectorAll('.ajoutPass').forEach(container => {
     container.style.display = 'block';
   });
+
+
+  chercheDossier(iduser)
 }
 
 //-------------------------------------------//
@@ -136,7 +140,6 @@ function changeDisplayOnSuccess(username) {
 //-------------------------------------------//
 function erreurDeConnection() {
   document.getElementById('erreurDeConnection').style.display = 'block'; // Change 'relative' to 'block'
-  alert('ah')
 }
 
 //-------------------------------------------//
@@ -152,3 +155,38 @@ function getCredentials(callback) {
     }
   });
 }
+
+//-------------------------------------------//
+//         Get Name DosSIER                  //
+//-------------------------------------------//
+
+function chercheDossier(iduser) {
+  // Effectuer une requête GET avec l'ID utilisateur
+  fetch(`http://ricardonunesemilio.fr:8005/getdossierid/${iduser}`)
+    .then(response => response.json()) // Convertir la réponse en JSON
+    .then(data => {
+      const selectElement = document.getElementById('selectfichieer'); // Récupérer l'élément <select>
+
+      // Parcourir les données reçues et créer une option pour chaque élément
+      data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.IDDOSSIER; // Utilisez l'attribut pertinent de votre réponse API
+        option.text = item.NOMDOSSIER; // Utilisez l'attribut pertinent de votre réponse API
+        selectElement.add(option); // Ajouter l'option au <select>
+      });
+    })
+    .catch(error => console.error('Erreur:', error)); // Gérer les erreurs éventuelles
+}
+
+document.getElementById("deconnection").addEventListener("click",()=>{
+    // Hide the login fields
+    document.querySelector('.connecter').style.display = 'block';
+    document.querySelectorAll('.ajoutPass').forEach(container => {
+      container.style.display = 'none';
+    });
+    // Show other fields
+    document.querySelectorAll('.ajoutPass').forEach(container => {
+      container.style.display = 'none';
+    });
+    chrome.storage.local.remove('credentials')
+});
