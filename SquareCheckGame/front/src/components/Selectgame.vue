@@ -1,15 +1,29 @@
 <script setup>
+import { useRouter } from 'vue-router';
+
+const router  = useRouter();
 const props = defineProps({
   msg: {
     type: String,
     required: true,
+  
   },
 });
 
 // Vous pouvez ajouter des fonctions pour chaque mode de jeu ici
+
 const selectMode = (mode) => {
-  console.log(`Mode sélectionné : ${mode}`);
+  if (mode === '1VS1 Bot') {
+    router.push('/bot');
+  } else if (mode === '1VS1 Local') {
+    router.push('/local');
+  } else if (mode === '1VS1 Multi') {
+    router.push('/multi');
+  }
 };
+
+
+
 </script>
 
 <template>
